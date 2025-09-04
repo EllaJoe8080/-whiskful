@@ -1,56 +1,45 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="icon" href="/favicon.ico" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <title>Whiskful</title>
+    <link rel="icon" href="/favicon.ico" />
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        width: 100vw;
-        overflow: hidden;
+      /* Make the image fill the whole screen, no scroll */
+      html, body { height: 100%; margin: 0; }
+      body{
+        /* Use your hero as the page itself */
+        background-image: url("/images/whiskful-homepage.png"); /* <- update if needed */
+        background-size: cover;      /* fill the screen */
+        background-position: center; /* keep content centered */
+        background-repeat: no-repeat;
+        background-attachment: scroll; /* avoids iOS jitter */
+        overflow: hidden;            /* no vertical scroll */
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       }
-      .hero {
-        position: relative;
-        width: 100%;
-        height: 100%;
-      }
-      .hero img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
-      .hero a {
-        position: absolute;
-        bottom: 40px; /* adjust to where you want the button */
+
+      /* One real CTA button */
+      .cta{
+        position: fixed;             /* stays at bottom center */
         left: 50%;
+        bottom: max(20px, env(safe-area-inset-bottom)); /* safe on iPhone */
         transform: translateX(-50%);
         padding: 14px 28px;
         border-radius: 999px;
         background: #ff7a59;
         color: #fff;
-        font-weight: bold;
-        font-size: 18px;
         text-decoration: none;
+        font-weight: 700;
+        font-size: 18px;
         box-shadow: 0 8px 20px rgba(255,122,89,.35);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform .15s ease, box-shadow .2s ease, opacity .15s ease;
       }
-      .hero a:hover {
-        transform: translateX(-50%) translateY(-3px);
-        box-shadow: 0 12px 28px rgba(255,122,89,.45);
-      }
+      .cta:hover{ transform: translateX(-50%) translateY(-2px); box-shadow: 0 12px 28px rgba(255,122,89,.45); }
+      .cta:active{ opacity:.9; }
     </style>
   </head>
   <body>
-    <div class="hero">
-      <!-- Your homepage image -->
-      <img src="/images/whiskful-homepage.png" alt="Whiskful homepage hero" />
-      <!-- Clickable button -->
-      <a href="recipes.html">See Recipes</a>
-    </div>
+    <a class="cta" href="recipes.html" aria-label="See recipes">See Recipes</a>
   </body>
 </html>
