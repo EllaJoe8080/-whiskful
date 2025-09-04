@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Whiskful</title>
     <style>
       html, body {
@@ -11,13 +11,26 @@
         height: 100%;
         width: 100%;
       }
-      body {
-        /* 👇 match this color to the cream/golden background of your illustration */
-        background: #f7d9a8 url("/images/whiskful-homepage.png") no-repeat center center;
-        background-size: contain;
+      .hero {
+        height: 100vh;        /* fill the entire viewport height */
+        width: 100vw;         /* fill the entire viewport width */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #fff8f3;  /* fallback background */
+      }
+      .hero img {
+        height: 100%;   /* scale to full screen height */
+        width: auto;    /* keep proportions */
+        object-fit: contain;
+        display: block;
       }
     </style>
   </head>
   <body>
+    <div class="hero">
+      <img src="/images/whiskful-homepage.png" alt="Whiskful homepage illustration" />
+    </div>
   </body>
 </html>
