@@ -4,47 +4,32 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <title>Whiskful</title>
+    <link rel="icon" href="/favicon.ico" />
     <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
+      :root{
+        /* Tweak these two numbers to nudge the button up/down per device */
+        --btn-top-desktop: 60vh; /* where the button sits on laptops/desktops */
+        --btn-top-mobile: 62vh;  /* where the button sits on phones */
+      }
+
+      /* Make the image the page itself and show ALL of it (no crop) */
+      html, body { height: 100%; margin: 0; }
+      body{
+        background-image: url("/images/whiskful-homepage.png"); /* <-- update if needed */
+        background-size: contain;   /* show entire illustration */
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-color: #fff8f3;  /* fills the letterbox margins */
+        overflow: hidden;           /* no scrolling */
         font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       }
 
-      /* Hero container */
-      .hero {
-        position: relative;
-        height: 100vh;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-      }
-
-      /* Hero image */
-      .hero img.bg {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* show entire illustration */
-        background: #fff8f3; /* fill behind if aspect ratio leaves gaps */
-      }
-
-      /* Overlay content */
-      .heroContent {
-        position: relative;
-        z-index: 1;
-        text-align: center;
-        margin-top: -60px; /* lift up a bit so button is under tagline */
-      }
-
-      .cta {
-        display: inline-block;
-        margin-top: 20px;
+      /* Single CTA button placed over the background */
+      .cta{
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        top: var(--btn-top-desktop);
         padding: 14px 28px;
         border-radius: 999px;
         background: #ff7a59;
@@ -55,23 +40,16 @@
         box-shadow: 0 8px 20px rgba(255,122,89,.35);
         transition: transform .15s ease, box-shadow .2s ease, opacity .15s ease;
       }
-      .cta:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 28px rgba(255,122,89,.45);
+      .cta:hover{ transform: translateX(-50%) translateY(-2px); box-shadow: 0 12px 28px rgba(255,122,89,.45); }
+      .cta:active{ opacity:.9; }
+
+      /* Mobile: place the button a touch lower */
+      @media (max-width: 640px){
+        .cta{ top: var(--btn-top-mobile); }
       }
-      .cta:active { opacity: .9; }
     </style>
   </head>
   <body>
-    <div class="hero">
-      <!-- Illustration -->
-      <img class="bg" src="/images/whiskful-homepage.png" alt="Whiskful homepage illustration" />
-      
-      <!-- Text + Button -->
-      <div class="heroContent">
-        <p style="font-size: 22px; font-weight: 500; color:#222;">A community where recipes come to life 🍰</p>
-        <a class="cta" href="recipes.html">See Recipes</a>
-      </div>
-    </div>
+    <a class="cta" href="recipes.html" aria-label="See recipes">See Recipes</a>
   </body>
 </html>
