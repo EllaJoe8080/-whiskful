@@ -17,139 +17,93 @@
         position: sticky;
         top: 0;
         z-index: 1000;
-
         height: 72px;
         padding: 0 24px;
         background: #fff;
         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
-
-      nav img.logo {
-        max-height: 140px;
-        width: auto;
-        display: block;
-      }
-
-      nav ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        gap: 24px;
-      }
-
-      nav ul li a {
-        text-decoration: none;
-        font-weight: 600;
-        color: #333;
-        transition: color 0.2s ease;
-      }
-      nav ul li a:hover {
-        color: #ff7a59;
-      }
+      nav img.logo { max-height: 140px; width: auto; display: block; }
+      nav ul { list-style:none; margin:0; padding:0; display:flex; gap:24px; }
+      nav ul li a { text-decoration:none; font-weight:600; color:#333; transition:color .2s; }
+      nav ul li a:hover { color:#ff7a59; }
 
       /* Search bar */
-      .search-container {
-        text-align: center;
-        margin: 40px auto 80px;
-      }
-
-      .search-box {
-        position: relative;
-        display: inline-block;
-        width: 60%;
-        max-width: 500px;
-      }
-
+      .search-container { text-align:center; margin: 36px auto 56px; }
+      .search-box { position:relative; display:inline-block; width:60%; max-width:500px; }
       .search-box input {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #ff7a59;
-        border-radius: 999px;
-        font-size: 16px;
-        outline: none;
-        transition: all 0.2s ease;
+        width:100%; padding:12px 16px; border:2px solid #ff7a59; border-radius:999px;
+        font-size:16px; outline:none; transition:all .2s;
       }
-      .search-box input:focus {
-        border-color: #ff5a36;
-        box-shadow: 0 0 8px rgba(255,122,89,0.3);
-      }
-
-      /* Cute dangling cherries */
+      .search-box input:focus { border-color:#ff5a36; box-shadow:0 0 8px rgba(255,122,89,.3); }
       .dangling-gif {
-        position: absolute;
-        top: -22px;     /* hang above input */
-        right: -50px;    /* attach to right corner */
-        width: 100px;    /* size */
-        pointer-events: none;
-
-        animation: sway 2.5s ease-in-out infinite;
-        transform-origin: top center;
+        position:absolute; top:-18px; right:-44px; width:112px; pointer-events:none;
+        animation:sway 2.5s ease-in-out infinite; transform-origin: top center;
       }
+      @keyframes sway { 0%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} 100%{transform:rotate(6deg)} }
 
-      @keyframes sway {
-        0%   { transform: rotate(6deg); }
-        50%  { transform: rotate(-6deg); }
-        100% { transform: rotate(6deg); }
-      }
-
-      /* Recipe gallery */
+      /* Gallery – a bit narrower and tighter gaps */
       .gallery {
-  max-width: 1000px; /* shrink the gallery a bit */
-  margin: 32px auto;
-  padding: 0 16px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* smaller base width */
-  gap: 20px;
-}
+        max-width: 920px;                 /* was 1000px */
+        margin: 24px auto 56px;
+        padding: 0 16px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 18px;                        /* was 20px */
+      }
 
-.card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  padding-bottom: 8px; /* tighten spacing */
-}
+      /* Card – compact gutters */
+      .card {
+        background:#fff;
+        border-radius:14px;
+        overflow:hidden;
+        box-shadow:0 6px 16px rgba(0,0,0,.08);
+        transition:transform .2s, box-shadow .2s;
+        padding: 10px;                    /* was larger */
+      }
+      .card:hover { transform:translateY(-6px); box-shadow:0 12px 24px rgba(0,0,0,.12); }
 
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-}
+      /* Thumbnail – larger image so space is filled */
+      .card img {
+        width: 88%;                       /* was 60–70% */
+        max-height: 210px;                /* was 120–160 */
+        object-fit: contain;
+        margin: 8px auto 6px;             /* tighter */
+        display:block;
+      }
 
-.card img {
-  width: 60%;          /* smaller image */
-  max-height: 120px;   /* cap height */
-  object-fit: contain;
-  margin: 8px auto 4px;
-  display: block;
-}
+      /* Title + meta – tighter margins and smaller fonts */
+      .card h2 {
+        margin: 4px 0 2px;
+        font-size: 16px;
+        color:#ff7a59;
+        text-align:center;
+        line-height: 1.2;
+      }
+      .card p {
+        margin: 0 0 6px;
+        font-size: 12px;
+        color:#555;
+        text-align:center;
+      }
 
-.card h2 {
-  margin: 4px 0;
-  font-size: 14px;     /* smaller title */
-  color: #ff7a59;
-  text-align: center;
-}
-
-.card p {
-  margin: 2px 0 6px; 
-  font-size: 12px;
-  color: #555;
-  text-align: center;
-}
+      /* Responsive tweaks */
+      @media (max-width: 640px) {
+        .search-box { width: 86%; }
+        .dangling-gif { top:-14px; right:-36px; width:96px; }
+        .gallery { max-width: 100%; gap: 16px; }
+        .card { padding: 10px; }
+        .card img { width: 92%; max-height: 190px; }
+        .card h2 { font-size: 15px; }
+      }
     </style>
   </head>
   <body>
     <!-- Navbar -->
     <nav>
-      <a href="index.html">
-        <img src="/logo.png" alt="Whiskful logo" class="logo" />
-      </a>
+      <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
       <ul>
         <li><a href="recipes.html">Recipes</a></li>
         <li><a href="#">Community</a></li>
@@ -157,7 +111,7 @@
       </ul>
     </nav>
 
-    <!-- Search bar with dangling cherries -->
+    <!-- Search with dangling cherries -->
     <div class="search-container">
       <div class="search-box">
         <input type="text" placeholder="Search recipes..." />
@@ -180,4 +134,4 @@
       </div>
     </main>
   </body>
-</html> 
+</html>
