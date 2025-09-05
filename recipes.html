@@ -6,126 +6,119 @@
     <title>Whiskful Recipes</title>
     <style>
       :root { --brand:#ff7a59; --bg:#fff8f3; --pin:#e60023; }
-      * { box-sizing: border-box; }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
       body {
-        margin:0;
         font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
         background: var(--bg);
         color:#222;
       }
 
       /* Navbar */
-      nav{
+      nav {
         position:sticky; top:0; z-index:1000;
         height:72px; padding:0 24px; background:#fff;
         box-shadow:0 2px 8px rgba(0,0,0,.06);
         display:flex; align-items:center; justify-content:space-between;
       }
-      nav img.logo{ max-height:140px; width:auto; display:block; }
-      nav ul{ list-style:none; margin:0; padding:0; display:flex; gap:24px; }
-      nav a{ text-decoration:none; font-weight:600; color:#333; }
-      nav a:hover, nav a:focus-visible{ color:var(--brand); outline:none; }
+      nav img.logo { max-height:140px; width:auto; display:block; }
+      nav ul { list-style:none; display:flex; gap:24px; }
+      nav a { text-decoration:none; font-weight:600; color:#333; }
+      nav a:hover { color:var(--brand); }
 
-      /* Search + cherries */
-      .search-wrap{ display:flex; justify-content:center; margin:28px 0 8px; }
-      .search-box{ position:relative; width:min(640px,92%); }
-      .search-box input{
+      /* Search bar */
+      .search-wrap { display:flex; justify-content:center; margin:28px 0 8px; }
+      .search-box { position:relative; width:min(640px,92%); }
+      .search-box input {
         width:100%; padding:12px 16px;
         border:2px solid var(--brand); border-radius:999px;
-        font-size:16px; background:#fff; outline:none;
-        transition: box-shadow .2s ease, border-color .2s ease;
+        font-size:16px; background:#fff;
       }
-      .search-box input:focus{
-        border-color:#ff5a36; box-shadow:0 0 8px rgba(255,122,89,.30);
+      .search-box input:focus {
+        border-color:#ff5a36; box-shadow:0 0 8px rgba(255,122,89,.3);
+        outline: none;
       }
-      .dangling-gif{
+      .dangling-gif {
         position:absolute; top:-22px; right:-50px; width:100px;
         pointer-events:none; transform-origin:top center;
         animation:sway 2.5s ease-in-out infinite;
       }
-      @keyframes sway { 0%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} 100%{transform:rotate(6deg)} }
+      @keyframes sway {
+        0%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} 100%{transform:rotate(6deg)}
+      }
 
       /* Grid */
-      .grid{
+      .grid {
         width:min(1100px,94%);
         margin:12px auto 64px;
         display:grid;
         grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
-        gap:10px;
+        gap:12px;
       }
 
-      .tile{
+      .tile {
         background:#fff; border-radius:8px; overflow:hidden;
         box-shadow:0 1px 6px rgba(0,0,0,.05);
         transition:transform .15s ease, box-shadow .15s ease;
         position:relative;
       }
-      .tile:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
-      .tile:focus-within{ outline:2px solid var(--brand); outline-offset:2px; }
+      .tile:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
 
-      .thumb{
-        position:relative;
-        aspect-ratio:2/3;               /* portrait poster tile */
+      .thumb {
+        aspect-ratio:2/3;
         background:#fafafa;
         display:flex; align-items:center; justify-content:center;
-        padding:4px;
+        padding:4px; /* keep some breathing room inside */
       }
-      .thumb img{
-        width:100%; height:100%;
-        object-fit:cover;
-        display:block;
-        border-radius:6px;
+      .thumb img {
+        width:100%; height:100%; object-fit:cover; display:block;
       }
 
-      /* Overlay actions (Save + Like) */
-      .overlay{
-        position:absolute; inset:0;
-        display:flex; justify-content:space-between; align-items:flex-start;
-        padding:10px;
-        pointer-events:none;            /* overlay itself doesn't eat clicks */
-        opacity:0; transition:opacity .2s ease;
+      /* Overlay for Save + Like */
+      .overlay {
+        position:absolute;
+        inset:4px;  /* matches .thumb padding */
+        pointer-events:none;
+        opacity:0;
+        transition:opacity .2s ease;
       }
-      .tile:hover .overlay,
-      .tile:focus-within .overlay{ opacity:1; }
+      .tile:hover .overlay { opacity:1; }
 
-      .save-btn{
-        pointer-events:auto;            /* buttons ARE clickable */
+      .save-btn, .icon-btn {
+        position:absolute; top:10px; pointer-events:auto;
+      }
+
+      .save-btn {
+        left:10px;
         border:0; border-radius:22px;
         background:var(--pin); color:#fff; font-weight:700;
         padding:8px 16px; font-size:14px; line-height:1;
         box-shadow:0 4px 12px rgba(0,0,0,.25);
-        cursor:pointer; transition:transform .15s ease, background .15s ease;
+        cursor:pointer;
+        transition:transform .15s ease, background .15s ease;
       }
-      .save-btn:hover{ transform:scale(1.05); background:#c7001c; }
+      .save-btn:hover { transform:scale(1.05); background:#c7001c; }
 
-      .icons{
-        pointer-events:none;
-        display:flex; gap:8px; align-items:center;
-      }
-      .icon-btn{
-        pointer-events:auto;
+      .icon-btn {
+        right:10px;
         width:36px; height:36px; border-radius:50%;
         display:grid; place-items:center;
-        background:rgba(255,255,255,.9); border:0; cursor:pointer;
+        background:#fff; border:0; cursor:pointer;
         box-shadow:0 3px 10px rgba(0,0,0,.2);
         transition:transform .15s ease, background .15s ease;
       }
-      .icon-btn:hover{ transform:scale(1.06); background:#fff; }
+      .icon-btn:hover { transform:scale(1.06); }
+      .icon-btn svg { display:block; }
 
-      /* Make the whole tile clickable but keep buttons on top */
-      .tile a{ position:absolute; inset:0; z-index:0; }
-      .overlay{ z-index:1; }
-
-      /* Small screens */
+      /* Responsive tweaks */
       @media (max-width:640px){
-        .grid{ grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:8px; }
-        .dangling-gif{ right:-34px; top:-16px; width:74px; }
-        .save-btn{ padding:7px 14px; font-size:13px; }
-        .icon-btn{ width:34px; height:34px; }
+        .grid { grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); }
+        .dangling-gif { right:-34px; top:-16px; width:74px; }
       }
     </style>
   </head>
   <body>
+    <!-- Navbar -->
     <nav>
       <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
       <ul>
@@ -135,6 +128,7 @@
       </ul>
     </nav>
 
+    <!-- Search -->
     <div class="search-wrap">
       <div class="search-box">
         <input type="text" placeholder="Search recipes..." />
@@ -142,22 +136,21 @@
       </div>
     </div>
 
+    <!-- Grid -->
     <main class="grid">
       <!-- Tile 1 -->
       <figure class="tile">
         <div class="thumb">
           <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll" loading="lazy" />
-          <div class="overlay">
-            <button class="save-btn" aria-label="Save recipe">Save</button>
-            <div class="icons">
-              <!-- Heart (like) -->
-              <button class="icon-btn" aria-label="Like">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff4d6d" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 21s-6.716-4.385-9.193-8.06C.79 10.03 2.047 6.5 5.254 6.5c1.87 0 3.027 1.14 3.746 2.29C9.72 7.64 10.88 6.5 12.75 6.5c3.206 0 4.463 3.53 2.446 6.44C18.716 16.615 12 21 12 21z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+        </div>
+        <!-- Hover overlay -->
+        <div class="overlay">
+          <button class="save-btn">Save</button>
+          <button class="icon-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="red" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 21s-6.5-4.35-9.33-7.64C-1.17 9.1 2.5 3 7.5 5.09 9.24 5.83 12 9 12 9s2.76-3.17 4.5-3.91c5-2.09 8.67 4.01 4.83 8.27C18.5 16.65 12 21 12 21z"/>
+            </svg>
+          </button>
         </div>
         <a href="#"></a>
       </figure>
@@ -166,16 +159,14 @@
       <figure class="tile">
         <div class="thumb">
           <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses" loading="lazy" />
-          <div class="overlay">
-            <button class="save-btn" aria-label="Save recipe">Save</button>
-            <div class="icons">
-              <button class="icon-btn" aria-label="Like">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff4d6d" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 21s-6.716-4.385-9.193-8.06C.79 10.03 2.047 6.5 5.254 6.5c1.87 0 3.027 1.14 3.746 2.29C9.72 7.64 10.88 6.5 12.75 6.5c3.206 0 4.463 3.53 2.446 6.44C18.716 16.615 12 21 12 21z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+        </div>
+        <div class="overlay">
+          <button class="save-btn">Save</button>
+          <button class="icon-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="red" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 21s-6.5-4.35-9.33-7.64C-1.17 9.1 2.5 3 7.5 5.09 9.24 5.83 12 9 12 9s2.76-3.17 4.5-3.91c5-2.09 8.67 4.01 4.83 8.27C18.5 16.65 12 21 12 21z"/>
+            </svg>
+          </button>
         </div>
         <a href="#"></a>
       </figure>
