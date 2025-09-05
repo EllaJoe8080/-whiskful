@@ -5,98 +5,99 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Whiskful Recipes</title>
     <style>
+      :root {
+        --brand: #ff7a59;
+        --page: #fff8f3;
+      }
       body {
         margin: 0;
         font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-        background: #fff8f3;
+        background: var(--page);
         color: #222;
       }
 
       /* Navbar */
       nav {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        height: 72px;
-        padding: 0 24px;
-        background: #fff;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        position: sticky; top: 0; z-index: 1000;
+        height: 72px; padding: 0 24px; background: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,.06);
+        display: flex; align-items: center; justify-content: space-between;
       }
       nav img.logo { max-height: 140px; width: auto; display: block; }
-      nav ul { list-style:none; margin:0; padding:0; display:flex; gap:24px; }
-      nav ul li a { text-decoration:none; font-weight:600; color:#333; transition:color .2s; }
-      nav ul li a:hover { color:#ff7a59; }
+      nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; }
+      nav ul li a { text-decoration: none; font-weight: 600; color: #333; transition: color .2s; }
+      nav ul li a:hover { color: var(--brand); }
 
-      /* Search bar */
-      .search-container { text-align:center; margin: 36px auto 56px; }
-      .search-box { position:relative; display:inline-block; width:60%; max-width:500px; }
+      /* Search bar + cherries */
+      .search { text-align: center; margin: 28px auto 22px; }
+      .search-box { position: relative; display: inline-block; width: 60%; max-width: 520px; }
       .search-box input {
-        width:100%; padding:12px 16px; border:2px solid #ff7a59; border-radius:999px;
-        font-size:16px; outline:none; transition:all .2s;
+        width: 100%; padding: 12px 16px; border: 2px solid var(--brand);
+        border-radius: 999px; font-size: 16px; outline: none; transition: box-shadow .2s, border-color .2s;
+        background: #fff;
       }
-      .search-box input:focus { border-color:#ff5a36; box-shadow:0 0 8px rgba(255,122,89,.3); }
-      .dangling-gif {
-        position:absolute; top:-18px; right:-44px; width:112px; pointer-events:none;
-        animation:sway 2.5s ease-in-out infinite; transform-origin: top center;
-      }
-      @keyframes sway { 0%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} 100%{transform:rotate(6deg)} }
+      .search-box input:focus { border-color: #ff5a36; box-shadow: 0 0 8px rgba(255,122,89,.3); }
 
-      /* Gallery – a bit narrower and tighter gaps */
-      .gallery {
-        max-width: 920px;                 /* was 1000px */
-        margin: 24px auto 56px;
+      .dangling-gif {
+        position: absolute; top: -22px; right: -50px; width: 100px;
+        pointer-events: none; transform-origin: top center;
+        animation: sway 2.5s ease-in-out infinite;
+      }
+      @keyframes sway {
+        0% { transform: rotate(6deg); }
+        50% { transform: rotate(-6deg); }
+        100% { transform: rotate(6deg); }
+      }
+
+      /* TikTok-style square tile grid */
+      .grid {
+        max-width: 1100px;
+        margin: 0 auto 64px;
         padding: 0 16px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 18px;                        /* was 20px */
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 14px;
       }
 
-      /* Card – compact gutters */
-      .card {
-        background:#fff;
-        border-radius:14px;
-        overflow:hidden;
-        box-shadow:0 6px 16px rgba(0,0,0,.08);
-        transition:transform .2s, box-shadow .2s;
-        padding: 10px;                    /* was larger */
+      .tile {
+        position: relative;
+        aspect-ratio: 1 / 1;           /* perfect square */
+        border-radius: 16px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 6px 16px rgba(0,0,0,.08);
+        transition: transform .2s ease, box-shadow .2s ease;
       }
-      .card:hover { transform:translateY(-6px); box-shadow:0 12px 24px rgba(0,0,0,.12); }
+      .tile:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,.12); }
 
-      /* Thumbnail – larger image so space is filled */
-      .card img {
-        width: 88%;                       /* was 60–70% */
-        max-height: 210px;                /* was 120–160 */
-        object-fit: contain;
-        margin: 8px auto 6px;             /* tighter */
-        display:block;
+      .tile img {
+        width: 100%; height: 100%; object-fit: cover;
+        display: block; transition: transform .25s ease;
+      }
+      .tile:hover img { transform: scale(1.06); }
+
+      /* caption badge like TikTok */
+      .tile figcaption {
+        position: absolute; left: 0; bottom: 0; width: 100%;
+        padding: 10px 12px;
+        font-size: 14px; font-weight: 700; color: #fff;
+        background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.75) 100%);
+        box-sizing: border-box;
+      }
+      .tile small {
+        display: block; font-weight: 500; opacity: .9; font-size: 12px;
       }
 
-      /* Title + meta – tighter margins and smaller fonts */
-      .card h2 {
-        margin: 4px 0 2px;
-        font-size: 16px;
-        color:#ff7a59;
-        text-align:center;
-        line-height: 1.2;
-      }
-      .card p {
-        margin: 0 0 6px;
-        font-size: 12px;
-        color:#555;
-        text-align:center;
+      /* Make the whole tile clickable */
+      .tile a {
+        position: absolute; inset: 0; z-index: 2;
       }
 
       /* Responsive tweaks */
       @media (max-width: 640px) {
         .search-box { width: 86%; }
-        .dangling-gif { top:-14px; right:-36px; width:96px; }
-        .gallery { max-width: 100%; gap: 16px; }
-        .card { padding: 10px; }
-        .card img { width: 92%; max-height: 190px; }
-        .card h2 { font-size: 15px; }
+        .dangling-gif { top: -18px; right: -40px; width: 90px; }
+        .grid { gap: 12px; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
       }
     </style>
   </head>
@@ -112,26 +113,36 @@
     </nav>
 
     <!-- Search with dangling cherries -->
-    <div class="search-container">
+    <div class="search">
       <div class="search-box">
         <input type="text" placeholder="Search recipes..." />
         <img src="/images/cherries.gif" alt="Cute cherries" class="dangling-gif" />
       </div>
     </div>
 
-    <!-- Recipe gallery -->
-    <main class="gallery">
-      <div class="card">
-        <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll">
-        <h2>Pistachio Chocolate Roll</h2>
-        <p>Servings: 10 · Total Time: 2 hrs</p>
-      </div>
+    <!-- TikTok-style tile grid -->
+    <main class="grid">
+      <!-- Tile 1 -->
+      <figure class="tile">
+        <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Roll" />
+        <figcaption>
+          Pistachio Chocolate Roll
+          <small>Servings 10 · 2 hr</small>
+        </figcaption>
+        <a href="#"></a>
+      </figure>
 
-      <div class="card">
-        <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses">
-        <h2>Strawberry Meringue Kisses</h2>
-        <p>Servings: 5 · Total Time: 1.5 hrs</p>
-      </div>
+      <!-- Tile 2 -->
+      <figure class="tile">
+        <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses" />
+        <figcaption>
+          Strawberry Meringue Kisses
+          <small>Servings 5 · 1.5 hr</small>
+        </figcaption>
+        <a href="#"></a>
+      </figure>
+
+      <!-- Add more tiles by copying the block above -->
     </main>
   </body>
 </html>
