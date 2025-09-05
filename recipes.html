@@ -17,19 +17,23 @@
         position: sticky;
         top: 0;
         z-index: 1000;
+
         height: 72px;
         padding: 0 24px;
         background: #fff;
         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
+
       nav img.logo {
         max-height: 140px;
         width: auto;
         display: block;
       }
+
       nav ul {
         list-style: none;
         margin: 0;
@@ -37,25 +41,30 @@
         display: flex;
         gap: 24px;
       }
+
       nav ul li a {
         text-decoration: none;
         font-weight: 600;
         color: #333;
         transition: color 0.2s ease;
       }
-      nav ul li a:hover { color: #ff7a59; }
+      nav ul li a:hover {
+        color: #ff7a59;
+      }
 
       /* Search bar */
       .search-container {
         text-align: center;
         margin: 40px auto 80px;
       }
+
       .search-box {
         position: relative;
         display: inline-block;
         width: 60%;
         max-width: 500px;
       }
+
       .search-box input {
         width: 100%;
         padding: 12px 16px;
@@ -64,75 +73,75 @@
         font-size: 16px;
         outline: none;
         transition: all 0.2s ease;
-        background: #fff;
       }
       .search-box input:focus {
         border-color: #ff5a36;
         box-shadow: 0 0 8px rgba(255,122,89,0.3);
       }
 
-      /* 🍒 dangling cherries on the top-right corner */
+      /* Cute dangling cherries */
       .dangling-gif {
         position: absolute;
-        top: -18px;     /* move down/up (less negative = lower) */
-        right: 8px;     /* increase to push left, decrease to hug the edge */
-        width: 100px;   /* overall size */
+        top: -22px;     /* hang above input */
+        right: -50px;    /* attach to right corner */
+        width: 100px;    /* size */
         pointer-events: none;
+
         animation: sway 2.5s ease-in-out infinite;
         transform-origin: top center;
       }
+
       @keyframes sway {
         0%   { transform: rotate(6deg); }
         50%  { transform: rotate(-6deg); }
         100% { transform: rotate(6deg); }
       }
 
-      /* Recipe gallery (tighter) */
-      .gallery{
-        max-width: 1000px;
-        margin: 32px auto;
-        padding: 0 16px;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-      }
-      .card{
-        background:#fff;
-        border-radius:16px;
-        box-shadow:0 6px 16px rgba(0,0,0,.08);
-        overflow:hidden;
-        transition:transform .2s, box-shadow .2s;
-        padding-bottom:12px;
-      }
-      .card:hover{ transform:translateY(-6px); box-shadow:0 12px 24px rgba(0,0,0,.12); }
+      /* Recipe gallery */
+      .gallery {
+  max-width: 1000px; /* shrink the gallery a bit */
+  margin: 40px auto;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* smaller base width */
+  gap: 20px;
+}
 
-      /* Fixed-height thumbnail so cards don’t look empty */
-      .thumb{
-        height: 170px;                /* consistent, compact */
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding: 10px;
-      }
-      .thumb img{
-        max-height: 100%;
-        max-width: 92%;               /* image a bit bigger */
-        object-fit: contain;          /* no cropping */
-        display:block;
-      }
+.card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding-bottom: 16px; /* tighten spacing */
+}
 
-      .card h2{
-        margin: 6px 12px 6px;
-        font-size: 16px;
-        color: #ff7a59;
-        text-align:center;
-      }
-      .card p{
-        margin: 0 12px;
-        font-size: 13px;
-        color: #555;
-        text-align:center;
-      }
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}
+
+.card img {
+  width: 70%;          /* smaller image */
+  max-height: 160px;   /* cap height */
+  object-fit: contain;
+  margin: 16px auto 8px;
+  display: block;
+}
+
+.card h2 {
+  margin: 0 12px 8px;
+  font-size: 16px;     /* smaller title */
+  color: #ff7a59;
+  text-align: center;
+}
+
+.card p {
+  margin: 0 12px;
+  font-size: 13px;
+  color: #555;
+  text-align: center;
+}
     </style>
   </head>
   <body>
@@ -159,20 +168,16 @@
     <!-- Recipe gallery -->
     <main class="gallery">
       <div class="card">
-        <div class="thumb">
-          <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll">
-        </div>
+        <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll">
         <h2>Pistachio Chocolate Roll</h2>
         <p>Servings: 10 · Total Time: 2 hrs</p>
       </div>
 
       <div class="card">
-        <div class="thumb">
-          <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses">
-        </div>
+        <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses">
         <h2>Strawberry Meringue Kisses</h2>
         <p>Servings: 5 · Total Time: 1.5 hrs</p>
       </div>
     </main>
   </body>
-</html>
+</html> 
