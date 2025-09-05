@@ -29,7 +29,7 @@
       }
 
       nav img.logo {
-         max-height: 140px;
+        max-height: 140px;
         width: auto;
         display: block;
       }
@@ -57,9 +57,16 @@
         text-align: center;
         margin: 40px auto;
       }
-      .search-container input {
+
+      .search-box {
+        position: relative;
+        display: inline-block;
         width: 60%;
         max-width: 500px;
+      }
+
+      .search-box input {
+        width: 100%;
         padding: 12px 16px;
         border: 2px solid #ff7a59;
         border-radius: 999px;
@@ -67,9 +74,27 @@
         outline: none;
         transition: all 0.2s ease;
       }
-      .search-container input:focus {
+      .search-box input:focus {
         border-color: #ff5a36;
         box-shadow: 0 0 8px rgba(255,122,89,0.3);
+      }
+
+      /* Cute dangling cherries */
+      .dangling-gif {
+        position: absolute;
+        top: -50px;   /* how far above the bar */
+        right: 30px;  /* hangs from the right side */
+        width: 60px;
+        pointer-events: none;
+
+        animation: sway 2.5s ease-in-out infinite;
+        transform-origin: top center; /* swing point */
+      }
+
+      @keyframes sway {
+        0%   { transform: rotate(5deg); }
+        50%  { transform: rotate(-5deg); }
+        100% { transform: rotate(5deg); }
       }
 
       /* Recipe gallery */
@@ -124,7 +149,10 @@
 
     <!-- Search bar -->
     <div class="search-container">
-      <input type="text" placeholder="Search recipes..." />
+      <div class="search-box">
+        <input type="text" placeholder="Search recipes..." />
+        <img src="/images/cherries.gif" alt="Cute cherries" class="dangling-gif" />
+      </div>
     </div>
 
     <!-- Recipe gallery -->
