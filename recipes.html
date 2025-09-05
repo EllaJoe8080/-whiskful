@@ -13,48 +13,48 @@
       }
 
       /* Navbar — fixed height */
-      nav {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
+     nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 
-        height: 72px;          /* 👈 fixed bar height */
-        padding: 0 24px;       /* horizontal padding only */
-        background: #fff;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  height: 72px;          /* fixed navbar height */
+  padding: 0 24px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 
-        display: flex;
-        align-items: center;   /* vertically center items inside */
-        justify-content: space-between;
-      }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-      /* Logo */
-  nav img.logo {
-    max-height: 120px;   /* 👈 bigger logo */
-    width: auto;
-    margin-top: -12px;   /* 👈 lift slightly if it looks off */
-    margin-bottom: -12px;
+/* Logo */
+nav img.logo {
+  max-height: 120px;   /* bigger logo */
+  width: auto;
+  margin-top: -12px;   /* let it overflow without stretching navbar */
+  margin-bottom: -12px;
+}
 
-      /* Nav links */
-      nav ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        gap: 24px;
-      }
+/* Nav links */
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 24px;
+}
 
-      nav ul li a {
-        text-decoration: none;
-        font-weight: 600;
-        color: #333;
-        line-height: 1;
-        transition: color 0.2s ease;
-      }
+nav ul li a {
+  text-decoration: none;   /* remove underline */
+  font-weight: 600;
+  color: #333;             /* dark gray */
+  transition: color 0.2s ease;
+}
 
-      nav ul li a:hover {
-        color: #ff7a59;
-      }
+nav ul li a:hover {
+  color: #ff7a59;          /* your theme color */
+}
 
       /* Page title */
       header {
