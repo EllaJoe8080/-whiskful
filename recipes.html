@@ -5,95 +5,76 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Whiskful Recipes</title>
     <style>
-      :root{
-        --brand:#ff7a59;
-        --bg:#fff8f3;
+      :root {
+        --brand: #ff7a59;
+        --bg: #fff8f3;
       }
-      *{box-sizing:border-box}
-      body{
-        margin:0;
-        font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-        background:var(--bg);
-        color:#222;
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: #222;
       }
 
       /* Navbar */
-      nav{
-        position:sticky; top:0; z-index:1000;
-        height:72px; padding:0 24px; background:#fff;
-        box-shadow:0 2px 8px rgba(0,0,0,.06);
-        display:flex; align-items:center; justify-content:space-between;
+      nav {
+        position: sticky; top: 0; z-index: 1000;
+        height: 72px; padding: 0 24px; background: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,.06);
+        display: flex; align-items: center; justify-content: space-between;
       }
-      nav img.logo{ max-height:140px; width:auto; display:block; }
-      nav ul{ list-style:none; margin:0; padding:0; display:flex; gap:24px; }
-      nav a{ text-decoration:none; font-weight:600; color:#333; }
-      nav a:hover{ color:var(--brand); }
+      nav img.logo { max-height: 140px; width: auto; display: block; }
+      nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; }
+      nav a { text-decoration: none; font-weight: 600; color: #333; }
+      nav a:hover { color: var(--brand); }
 
       /* Search + cherries */
-      .search-wrap{ display:flex; justify-content:center; margin:28px 0 12px; }
-      .search-box{ position:relative; width:min(640px,92%); }
-      .search-box input{
-        width:100%; padding:12px 16px; border:2px solid var(--brand);
-        border-radius:999px; font-size:16px; outline:none; background:#fff;
+      .search-wrap { display: flex; justify-content: center; margin: 28px 0 12px; }
+      .search-box { position: relative; width: min(640px,92%); }
+      .search-box input {
+        width: 100%; padding: 12px 16px; border: 2px solid var(--brand);
+        border-radius: 999px; font-size: 16px; outline: none; background: #fff;
       }
-      .search-box input:focus{ border-color:#ff5a36; box-shadow:0 0 8px rgba(255,122,89,.3); }
-      .dangling-gif{
-        position:absolute; top:-22px; right:-50px; width:100px; pointer-events:none;
-        transform-origin:top center; animation:sway 2.5s ease-in-out infinite;
+      .search-box input:focus { border-color: #ff5a36; box-shadow: 0 0 8px rgba(255,122,89,.3); }
+      .dangling-gif {
+        position: absolute; top: -22px; right: -50px; width: 100px; pointer-events: none;
+        transform-origin: top center; animation: sway 2.5s ease-in-out infinite;
       }
-      @keyframes sway{0%{transform:rotate(6deg)}50%{transform:rotate(-6deg)}100%{transform:rotate(6deg)}}
+      @keyframes sway { 0%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} 100%{transform:rotate(6deg)} }
 
-      /* Square grid */
-      .grid{
-        width:min(1100px,94%);
-        margin:12px auto 64px;
-        display:grid;
-        grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); /* bigger tiles */
-        gap:14px;
-      }
-      @media (max-width:640px){
-        .grid{ grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
+      /* Grid */
+      .grid {
+        width: min(1100px,94%);
+        margin: 12px auto 64px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 8px; /* 👈 tighter space between posters */
       }
 
-      .tile{
-        background:#fff;
-        border-radius:16px;
-        overflow:hidden;
-        box-shadow:0 2px 10px rgba(0,0,0,.06);
-        transition:transform .15s ease, box-shadow .15s ease;
-        display:flex;              /* stack image + meta */
-        flex-direction:column;
+      .tile {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        transition: transform .15s ease, box-shadow .15s ease;
+        position: relative;
       }
-      .tile:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
+      .tile:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
 
-      /* Square image area that shows full poster */
-      .thumb{
-        aspect-ratio:1/1;          /* perfect square */
-        background:#fafafa;        /* subtle backdrop around poster */
-        display:flex; align-items:center; justify-content:center;
+      .thumb {
+        aspect-ratio: 1/1; /* square grid look */
+        background: #fafafa;
+        display: flex; align-items: center; justify-content: center;
       }
-      .thumb img{
-        max-width:100%;
-        max-height:100%;
-        object-fit:contain;        /* <— show full poster, no crop */
-        display:block;
-        padding:8px;               /* whitespace around poster */
+      .thumb img {
+        max-width: 100%; max-height: 100%;
+        object-fit: contain;
+        display: block;
       }
-
-      /* Text under the image */
-      .meta{
-        padding:10px 12px 14px;
-        text-align:center;
-      }
-      .meta h3{
-        margin:0 0 6px;
-        font-size:16px; font-weight:700; color:var(--brand);
-      }
-      .meta small{ color:#666; font-size:13px; }
 
       /* Make tile clickable */
-      .tile a{ position:absolute; inset:0; }
-      .tile{ position:relative; }
+      .tile a { position: absolute; inset: 0; }
     </style>
   </head>
   <body>
@@ -124,10 +105,6 @@
         <div class="thumb">
           <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll" loading="lazy" />
         </div>
-        <figcaption class="meta">
-          <h3>Pistachio Chocolate Roll</h3>
-          <small>Servings 10 · 2 hr</small>
-        </figcaption>
         <a href="#"></a>
       </figure>
 
@@ -136,10 +113,6 @@
         <div class="thumb">
           <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses" loading="lazy" />
         </div>
-        <figcaption class="meta">
-          <h3>Strawberry Meringue Kisses</h3>
-          <small>Servings 5 · 1.5 hr</small>
-        </figcaption>
         <a href="#"></a>
       </figure>
     </main>
