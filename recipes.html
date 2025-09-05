@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Whiskful Recipes</title>
     <style>
-      :root { --brand:#ff7a59; --bg:#fff8f3; }
+      :root { --brand:#ff7a59; --bg:#fff8f3; --pin:#e60023; }
       * { box-sizing: border-box; }
       body {
         margin:0;
@@ -45,7 +45,7 @@
       }
       @keyframes sway { 0%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} 100%{transform:rotate(6deg)} }
 
-      /* Responsive grid (TikTok-style) */
+      /* Grid */
       .grid{
         width:min(1100px,94%);
         margin:12px auto 64px;
@@ -64,30 +64,64 @@
       .tile:focus-within{ outline:2px solid var(--brand); outline-offset:2px; }
 
       .thumb{
-        aspect-ratio:2/3;   /* keep perfect squares */
+        position:relative;
+        aspect-ratio:2/3;               /* portrait poster tile */
         background:#fafafa;
         display:flex; align-items:center; justify-content:center;
-        padding: 4px;
+        padding:4px;
       }
-      .thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;  /* fill entire square */
-  display: block;
+      .thumb img{
+        width:100%; height:100%;
+        object-fit:cover;
+        display:block;
+        border-radius:6px;
       }
 
-      /* Make tile fully clickable */
-      .tile a{ position:absolute; inset:0; }
-      .tile a:focus-visible{ outline: none; }
+      /* Overlay actions (Save + Like) */
+      .overlay{
+        position:absolute; inset:0;
+        display:flex; justify-content:space-between; align-items:flex-start;
+        padding:10px;
+        pointer-events:none;            /* overlay itself doesn't eat clicks */
+        opacity:0; transition:opacity .2s ease;
+      }
+      .tile:hover .overlay,
+      .tile:focus-within .overlay{ opacity:1; }
 
-      /* Small screens: more columns, smaller cherries, tighter gaps */
-      @media (max-width: 640px){
-        .grid{ grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:8px; }
+      .save-btn{
+        pointer-events:auto;            /* buttons ARE clickable */
+        border:0; border-radius:22px;
+        background:var(--pin); color:#fff; font-weight:700;
+        padding:8px 16px; font-size:14px; line-height:1;
+        box-shadow:0 4px 12px rgba(0,0,0,.25);
+        cursor:pointer; transition:transform .15s ease, background .15s ease;
+      }
+      .save-btn:hover{ transform:scale(1.05); background:#c7001c; }
+
+      .icons{
+        pointer-events:none;
+        display:flex; gap:8px; align-items:center;
+      }
+      .icon-btn{
+        pointer-events:auto;
+        width:36px; height:36px; border-radius:50%;
+        display:grid; place-items:center;
+        background:rgba(255,255,255,.9); border:0; cursor:pointer;
+        box-shadow:0 3px 10px rgba(0,0,0,.2);
+        transition:transform .15s ease, background .15s ease;
+      }
+      .icon-btn:hover{ transform:scale(1.06); background:#fff; }
+
+      /* Make the whole tile clickable but keep buttons on top */
+      .tile a{ position:absolute; inset:0; z-index:0; }
+      .overlay{ z-index:1; }
+
+      /* Small screens */
+      @media (max-width:640px){
+        .grid{ grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:8px; }
         .dangling-gif{ right:-34px; top:-16px; width:74px; }
-      }
-      /* Large screens: breathe a bit more */
-      @media (min-width: 1280px){
-        .grid{ grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:12px; }
+        .save-btn{ padding:7px 14px; font-size:13px; }
+        .icon-btn{ width:34px; height:34px; }
       }
     </style>
   </head>
@@ -113,6 +147,17 @@
       <figure class="tile">
         <div class="thumb">
           <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll" loading="lazy" />
+          <div class="overlay">
+            <button class="save-btn" aria-label="Save recipe">Save</button>
+            <div class="icons">
+              <!-- Heart (like) -->
+              <button class="icon-btn" aria-label="Like">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff4d6d" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 21s-6.716-4.385-9.193-8.06C.79 10.03 2.047 6.5 5.254 6.5c1.87 0 3.027 1.14 3.746 2.29C9.72 7.64 10.88 6.5 12.75 6.5c3.206 0 4.463 3.53 2.446 6.44C18.716 16.615 12 21 12 21z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
         <a href="#"></a>
       </figure>
@@ -121,6 +166,16 @@
       <figure class="tile">
         <div class="thumb">
           <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses" loading="lazy" />
+          <div class="overlay">
+            <button class="save-btn" aria-label="Save recipe">Save</button>
+            <div class="icons">
+              <button class="icon-btn" aria-label="Like">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff4d6d" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 21s-6.716-4.385-9.193-8.06C.79 10.03 2.047 6.5 5.254 6.5c1.87 0 3.027 1.14 3.746 2.29C9.72 7.64 10.88 6.5 12.75 6.5c3.206 0 4.463 3.53 2.446 6.44C18.716 16.615 12 21 12 21z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
         <a href="#"></a>
       </figure>
