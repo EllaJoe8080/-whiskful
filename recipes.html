@@ -3,98 +3,76 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Whiskful Recipes</title>
+    <title>Whiskful</title>
     <style>
-      body {
+      html, body {
         margin: 0;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-        background: #fff8f3;
-        color: #222;
+        padding: 0;
+        height: 100%;
+        width: 100%;
       }
 
-      /* Navbar — fixed height */
-     nav {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-
-  height: 72px;          /* fixed navbar height */
-  padding: 0 24px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Logo */
-nav img.logo {
-  max-height: 140px;   /* bigger logo */
-  width: auto;
-  margin-top: -12px;   /* let it overflow without stretching navbar */
-  margin-bottom: -12px;
-}
-
-/* Nav links */
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: 24px;
-}
-
-nav ul li a {
-  text-decoration: none;   /* remove underline */
-  font-weight: 600;
-  color: #333;             /* dark gray */
-  transition: color 0.2s ease;
-}
-
-nav ul li a:hover {
-  color: #ff7a59;          /* your theme color */
-}
-
-      /* Search bar */
-      .search-container {
-        text-align: center;
-        margin: 40px auto;
+      .banner {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
-      .search-container input {
-        width: 60%;
-        max-width: 500px;
-        padding: 12px 16px;
-        border: 2px solid #ff7a59;
+      .banner img.bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+        z-index: -1; /* background image */
+      }
+
+      .search-gif {
+        width: 140px;   /* adjust size */
+        height: auto;
+        margin-bottom: 16px; /* spacing before button */
+      }
+
+      .cta {
+        padding: 14px 28px;
         border-radius: 999px;
-        font-size: 16px;
-        outline: none;
-        transition: all 0.2s ease;
+        background: #ff7a59;
+        color: #fff;
+        font-weight: 700;
+        font-size: 18px;
+        text-decoration: none;
+        box-shadow: 0 8px 20px rgba(255,122,89,.35);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
 
-      .search-container input:focus {
-        border-color: #ff5a36;
-        box-shadow: 0 0 8px rgba(255,122,89,0.3);
+      .cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(255,122,89,.45);
       }
+
+      .cta:active { opacity: .9; }
     </style>
   </head>
   <body>
-    <!-- Navbar -->
-    <nav>
-      <a href="index.html">
-        <img src="/logo.png" alt="Whiskful logo" class="logo" />
-      </a>
-      <ul>
-        <li><a href="recipes.html">Recipes</a></li>
-        <li><a href="#">Community</a></li>
-        <li><a href="#">About</a></li>
-      </ul>
-    </nav>
+    <div class="banner">
+      <!-- Background image -->
+      <picture>
+        <source media="(min-width: 641px)" srcset="/images/whiskful-homepage.png">
+        <img src="/images/whiskful-homepage-phone.png" alt="Whiskful hero" class="bg">
+      </picture>
 
-    <!-- Search bar -->
-    <div class="search-container">
-      <input type="text" placeholder="Search recipes..." />
+      <!-- Cute cherries GIF -->
+      <img src="/images/cherries.gif" alt="Cute cherries" class="search-gif">
+
+      <!-- Button -->
+      <a class="cta" href="recipes.html">See Recipes</a>
     </div>
   </body>
 </html>
