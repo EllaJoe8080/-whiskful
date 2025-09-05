@@ -27,12 +27,12 @@
         display: block;
       }
 
-      /* Button positioned relative to the top */
+      /* Button placed under tagline */
       .cta {
         position: absolute;
-        top: 55%;  /* adjust until it's just below the text */
+        top: 42%;   /* 👈 move up/down until it sits under the text */
         left: 50%;
-        transform: translate(-50%, 0);
+        transform: translateX(-50%);
         padding: 14px 28px;
         border-radius: 999px;
         background: #ff7a59;
@@ -44,11 +44,17 @@
       }
 
       .cta:hover {
-        transform: translate(-50%, -2px);
+        transform: translateX(-50%) translateY(-2px);
         box-shadow: 0 12px 28px rgba(255,122,89,.45);
       }
-
       .cta:active { opacity: .9; }
+
+      /* On smaller screens, adjust */
+      @media (max-width: 640px) {
+        .cta {
+          top: 48%;   /* 👈 move button slightly lower on phones */
+        }
+      }
     </style>
   </head>
   <body>
