@@ -5,106 +5,106 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Whiskful Recipes</title>
     <style>
-      :root {
-        --brand: #ff7a59;
-        --page: #fff8f3;
+      :root{
+        --brand:#ff7a59;
+        --bg:#fff8f3;
       }
-      body {
-        margin: 0;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-        background: var(--page);
-        color: #222;
+      *{box-sizing:border-box}
+      body{
+        margin:0;
+        font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+        background:var(--bg);
+        color:#222;
       }
 
       /* Navbar */
-      nav {
-        position: sticky; top: 0; z-index: 1000;
-        height: 72px; padding: 0 24px; background: #fff;
-        box-shadow: 0 2px 8px rgba(0,0,0,.06);
-        display: flex; align-items: center; justify-content: space-between;
+      nav{
+        position:sticky; top:0; z-index:1000;
+        height:72px; padding:0 24px; background:#fff;
+        box-shadow:0 2px 8px rgba(0,0,0,.06);
+        display:flex; align-items:center; justify-content:space-between;
       }
-      nav img.logo { max-height: 140px; width: auto; display: block; }
-      nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; }
-      nav ul li a { text-decoration: none; font-weight: 600; color: #333; transition: color .2s; }
-      nav ul li a:hover { color: var(--brand); }
+      nav img.logo{ max-height:140px; width:auto; display:block; }
+      nav ul{ list-style:none; margin:0; padding:0; display:flex; gap:24px; }
+      nav a{ text-decoration:none; font-weight:600; color:#333; }
+      nav a:hover{ color:var(--brand); }
 
       /* Search bar + cherries */
-      .search { text-align: center; margin: 28px auto 22px; }
-      .search-box { position: relative; display: inline-block; width: 60%; max-width: 520px; }
-      .search-box input {
-        width: 100%; padding: 12px 16px; border: 2px solid var(--brand);
-        border-radius: 999px; font-size: 16px; outline: none; transition: box-shadow .2s, border-color .2s;
-        background: #fff;
+      .search-wrap{ display:flex; justify-content:center; margin:28px 0 12px; }
+      .search-box{ position:relative; width:min(640px,92%); }
+      .search-box input{
+        width:100%; padding:12px 16px; border:2px solid var(--brand);
+        border-radius:999px; font-size:16px; outline:none;
+        background:#fff;
       }
-      .search-box input:focus { border-color: #ff5a36; box-shadow: 0 0 8px rgba(255,122,89,.3); }
+      .search-box input:focus{ border-color:#ff5a36; box-shadow:0 0 8px rgba(255,122,89,.3); }
+      .dangling-gif{
+        position:absolute; top:-22px; right:-50px; width:100px; pointer-events:none;
+        transform-origin:top center; animation:sway 2.5s ease-in-out infinite;
+      }
+      @keyframes sway{0%{transform:rotate(6deg)}50%{transform:rotate(-6deg)}100%{transform:rotate(6deg)}}
 
-      .dangling-gif {
-        position: absolute; top: -22px; right: -50px; width: 100px;
-        pointer-events: none; transform-origin: top center;
-        animation: sway 2.5s ease-in-out infinite;
+      /* Grid, TikTok-style tiles */
+      .grid{
+        width:min(1100px,94%);
+        margin:12px auto 64px;
+        display:grid;
+        grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+        gap:12px;
       }
-      @keyframes sway {
-        0% { transform: rotate(6deg); }
-        50% { transform: rotate(-6deg); }
-        100% { transform: rotate(6deg); }
+      @media (min-width:1024px){
+        .grid{ grid-template-columns:repeat(4,1fr); }
       }
-
-      /* TikTok-style square tile grid */
-      .grid {
-        max-width: 1100px;
-        margin: 0 auto 64px;
-        padding: 0 16px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 14px;
-      }
-
-      .tile {
-        position: relative;
-        aspect-ratio: 1 / 1;           /* perfect square */
-        border-radius: 16px;
-        overflow: hidden;
-        background: #fff;
-        box-shadow: 0 6px 16px rgba(0,0,0,.08);
-        transition: transform .2s ease, box-shadow .2s ease;
-      }
-      .tile:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,.12); }
-
-      .tile img {
-        width: 100%; height: 100%; object-fit: cover;
-        display: block; transition: transform .25s ease;
-      }
-      .tile:hover img { transform: scale(1.06); }
-
-      /* caption badge like TikTok */
-      .tile figcaption {
-        position: absolute; left: 0; bottom: 0; width: 100%;
-        padding: 10px 12px;
-        font-size: 14px; font-weight: 700; color: #fff;
-        background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.75) 100%);
-        box-sizing: border-box;
-      }
-      .tile small {
-        display: block; font-weight: 500; opacity: .9; font-size: 12px;
+      @media (max-width:640px){
+        .grid{ gap:8px; }
       }
 
-      /* Make the whole tile clickable */
-      .tile a {
-        position: absolute; inset: 0; z-index: 2;
+      .tile{
+        position:relative;
+        aspect-ratio:1/1;          /* perfect square like TikTok */
+        border-radius:14px;
+        overflow:hidden;
+        background:#fff;
+        box-shadow:0 2px 10px rgba(0,0,0,.06);
+        transition:transform .15s ease, box-shadow .15s ease;
+      }
+      .tile img{
+        width:100%; height:100%;
+        object-fit:cover;          /* fills the square */
+        display:block;
+        transition:transform .25s ease;
+      }
+      .tile:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
+      .tile:hover img{ transform:scale(1.04); }
+
+      /* Caption overlay (bottom) */
+      .tile figcaption{
+        position:absolute; left:0; right:0; bottom:0;
+        padding:10px 10px 12px;
+        background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0));
+        color:#fff;
+        display:flex; flex-direction:column; gap:4px;
+      }
+      .tile h3{
+        margin:0; font-size:14px; line-height:1.2; font-weight:700;
+        text-shadow:0 1px 2px rgba(0,0,0,.3);
+      }
+      .tile small{
+        opacity:.9; font-size:12px;
       }
 
-      /* Responsive tweaks */
-      @media (max-width: 640px) {
-        .search-box { width: 86%; }
-        .dangling-gif { top: -18px; right: -40px; width: 90px; }
-        .grid { gap: 12px; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      /* Make each tile clickable */
+      .tile a{
+        position:absolute; inset:0;
       }
     </style>
   </head>
   <body>
     <!-- Navbar -->
     <nav>
-      <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
+      <a href="index.html">
+        <img src="/logo.png" alt="Whiskful logo" class="logo" />
+      </a>
       <ul>
         <li><a href="recipes.html">Recipes</a></li>
         <li><a href="#">Community</a></li>
@@ -112,21 +112,21 @@
       </ul>
     </nav>
 
-    <!-- Search with dangling cherries -->
-    <div class="search">
+    <!-- Search bar with dangling cherries -->
+    <div class="search-wrap">
       <div class="search-box">
         <input type="text" placeholder="Search recipes..." />
-        <img src="/images/cherries.gif" alt="Cute cherries" class="dangling-gif" />
+        <img src="/images/cherries.gif" alt="" class="dangling-gif" />
       </div>
     </div>
 
-    <!-- TikTok-style tile grid -->
+    <!-- TikTok-style grid -->
     <main class="grid">
       <!-- Tile 1 -->
       <figure class="tile">
-        <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Roll" />
+        <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll" loading="lazy" />
         <figcaption>
-          Pistachio Chocolate Roll
+          <h3>Pistachio Chocolate Roll</h3>
           <small>Servings 10 · 2 hr</small>
         </figcaption>
         <a href="#"></a>
@@ -134,15 +134,15 @@
 
       <!-- Tile 2 -->
       <figure class="tile">
-        <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses" />
+        <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses" loading="lazy" />
         <figcaption>
-          Strawberry Meringue Kisses
+          <h3>Strawberry Meringue Kisses</h3>
           <small>Servings 5 · 1.5 hr</small>
         </figcaption>
         <a href="#"></a>
       </figure>
 
-      <!-- Add more tiles by copying the block above -->
+      <!-- Add more tiles by duplicating a <figure class="tile"> block -->
     </main>
   </body>
 </html>
