@@ -118,9 +118,13 @@
         transform: translateY(-6px);
         box-shadow: 0 12px 24px rgba(0,0,0,0.12);
       }
-      .card img {
-        width: 100%;
-        display: block;
+.card img {
+  width: 80%;          /* 👈 makes the image smaller */
+  max-height: 200px;   /* 👈 optional, limit height */
+  object-fit: contain; /* 👈 keeps proportions, no crop */
+  margin: 0 auto;      /* 👈 centers image inside the card */
+  display: block;
+
       }
       .card h2 {
         margin: 16px;
