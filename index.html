@@ -28,27 +28,27 @@
       }
 
       /* Button placed under tagline */
-      .cta {
-        position: absolute;
-        top: 38%;   /* 👈 move up/down until it sits under the text */
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 18px 36px;
-        border-radius: 999px;
-        background: #ff7a59;
-        color: #fff;
-        font-weight: 700;
-        font-size: 20px;
-        text-decoration: none;
-        box-shadow: 0 8px 20px rgba(255,122,89,.35);
-      }
+     .cta {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 18px 36px;   /* 👈 bigger padding */
+  border-radius: 999px;
+  background: #ff7a59;
+  color: #fff;
+  font-weight: 700;
+  font-size: 20px;      /* 👈 larger font size */
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(255,122,89,.35);
+}
 
-      .cta:hover {
-        transform: translateX(-50%) translateY(-2px);
-        box-shadow: 0 12px 28px rgba(255,122,89,.45);
-      }
-      .cta:active { opacity: .9; }
-
+.cta:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 14px 32px rgba(255,122,89,.45);
+}
+.cta:active { opacity: .9; }
+      
       /* On smaller screens, adjust */
       @media (max-width: 640px) {
         .cta {
