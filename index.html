@@ -5,66 +5,102 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Whiskful</title>
     <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
+      :root{
+        /* Tweak these once if you want to nudge the block up/down */
+        --hero-top-desktop: 22vh;
+        --hero-top-mobile: 26vh;
+        --brand: #ff7a59;
+        --ink: #1e1e1e;
       }
 
-      .banner {
-        position: relative;
-        width: 100%;
-        height: 100vh;
-        overflow: hidden;
+      html, body { margin:0; height:100%; width:100%; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+
+      /* Banner fills the screen */
+      .banner{
+        position:relative;
+        width:100%;
+        height:100vh;
+        overflow:hidden;
+        background:#fff8f3;
       }
 
-      .banner img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center top;
-        display: block;
+      /* Background artwork (desktop -> mobile via <picture>) */
+      .banner picture, .banner img.bg{
+        position:absolute; inset:0;
+        width:100%; height:100%;
+      }
+      .banner img.bg{
+        object-fit:cover;      /* fill screen; we control cropping via mobile crop */
+        object-position:center top;
+        display:block;
       }
 
-      /* Button placed under tagline */
-     .cta {
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 18px 36px;   /* 👈 bigger padding */
-  border-radius: 999px;
-  background: #ff7a59;
-  color: #fff;
-  font-weight: 700;
-  font-size: 20px;      /* 👈 larger font size */
-  text-decoration: none;
-  box-shadow: 0 10px 24px rgba(255,122,89,.35);
-}
+      /* Overlay content (logo + tagline + button) */
+      .heroContent{
+        position:absolute;
+        left:50%;
+        top:var(--hero-top-desktop);
+        transform:translateX(-50%);
+        text-align:center;
+        color:var(--ink);
+        padding:0 16px;
+        user-select:none;
+      }
 
-.cta:hover {
-  transform: translateX(-50%) translateY(-2px);
-  box-shadow: 0 14px 32px rgba(255,122,89,.45);
-}
-.cta:active { opacity: .9; }
-      
-      /* On smaller screens, adjust */
-      @media (max-width: 640px) {
-        .cta {
-          top: 48%;   /* 👈 move button slightly lower on phones */
-        }
+      .wordmark{
+        height:clamp(40px,10vh,88px);   /* responsive logo height */
+        width:auto;
+        display:block;
+        margin:0 auto 12px;
+      }
+
+      .tagline{
+        margin:0 0 18px;
+        font-weight:700;
+        font-size:clamp(18px, 2.4vw, 36px);
+        line-height:1.15;
+        text-shadow: 0 2px 8px rgba(0,0,0,.10); /* subtle for readability */
+      }
+
+      .cta{
+        display:inline-block;
+        padding:18px 36px;
+        border-radius:999px;
+        background:var(--brand);
+        color:#fff;
+        font-weight:800;
+        font-size:clamp(16px, 1.6vw, 20px);
+        text-decoration:none;
+        box-shadow:0 10px 24px rgba(255,122,89,.35);
+        transition:transform .15s ease, box-shadow .2s ease, opacity .15s ease;
+      }
+      .cta:hover{ transform:translateY(-2px); box-shadow:0 14px 32px rgba(255,122,89,.45); }
+      .cta:active{ opacity:.92; }
+
+      /* Mobile adjustments */
+      @media (max-width: 640px){
+        .heroContent{ top:var(--hero-top-mobile); }
+        .tagline{ font-size:clamp(18px, 5.2vw, 26px); }
       }
     </style>
   </head>
   <body>
     <div class="banner">
+      <!-- Background art: desktop first, then mobile fallback -->
       <picture>
+        <!-- Desktop / tablets -->
         <source media="(min-width: 641px)" srcset="/images/whiskful-homepage.png">
-        <img src="/images/whiskful-homepage-phone.png" alt="Whiskful hero">
+        <!-- Mobile crop -->
+        <img class="bg" src="/images/whiskful-homepage-phone.png" alt="Whiskful background">
       </picture>
 
-      <a class="cta" href="recipes.html">See Recipes</a>
+      <!-- Overlay: logo + tagline + button -->
+      <div class="heroContent">
+        <!-- Use your logo image for the exact brand style -->
+        <img class="wordmark" src="/logo.png" alt="Whiskful" />
+        <p class="tagline">A community where recipes come to life 🍰</p>
+        <a class="cta" href="recipes.html">See Recipes</a>
+      </div>
     </div>
   </body>
 </html>
