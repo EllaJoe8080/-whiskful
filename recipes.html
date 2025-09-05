@@ -12,78 +12,70 @@
         color: #222;
       }
 
-      header {
-        text-align: center;
-        padding: 24px;
-        background: #ff7a59;
-        color: white;
-      }
-
-      header h1 {
-        margin: 0;
-        font-size: 32px;
-      }
-
-      .gallery {
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 0 16px;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 24px;
-      }
-
-      .card {
+      /* Navbar */
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 24px;
         background: white;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-      .card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
       }
 
-      .card img {
-        width: 100%;
-        height: auto;
-        display: block;
+      nav img.logo {
+        height: 48px;   /* adjust size as you like */
+        width: auto;
       }
 
-      .card h2 {
-        margin: 16px;
-        font-size: 20px;
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 20px;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        font-weight: 600;
+        color: #333;
+        transition: color 0.2s ease;
+      }
+      nav ul li a:hover {
         color: #ff7a59;
       }
 
-      .card p {
-        margin: 0 16px 16px;
-        font-size: 14px;
-        color: #555;
+      /* Page title */
+      header {
+        text-align: center;
+        padding: 32px 16px;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 32px;
+        color: #ff7a59;
       }
     </style>
   </head>
   <body>
+    <!-- Navbar -->
+    <nav>
+      <a href="index.html">
+        <img src="/logo.png" alt="Whiskful logo" class="logo" />
+      </a>
+      <ul>
+        <li><a href="recipes.html">Recipes</a></li>
+        <li><a href="#">Community</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </nav>
+
+    <!-- Page title -->
     <header>
       <h1>Whiskful Recipes 🍰</h1>
     </header>
-
-    <main class="gallery">
-      <!-- Example recipe cards -->
-      <div class="card">
-        <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll Cake">
-        <h2>Pistachio Chocolate Roll</h2>
-        <p>Servings: 10 · Total Time: 2 hrs</p>
-      </div>
-
-      <div class="card">
-        <img src="/images/strawberry-meringue.png" alt="Strawberry Meringue Kisses">
-        <h2>Strawberry Meringue Kisses</h2>
-        <p>Servings: 5 · Total Time: 2 hrs</p>
-      </div>
-
-      <!-- Add more cards as you upload recipes -->
-    </main>
   </body>
 </html>
