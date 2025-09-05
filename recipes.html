@@ -55,7 +55,7 @@
       /* Search bar */
       .search-container {
         text-align: center;
-        margin: 40px auto;
+        margin: 40px auto 80px; /* add extra space for dangling gif */
       }
 
       .search-box {
@@ -82,19 +82,20 @@
       /* Cute dangling cherries */
       .dangling-gif {
         position: absolute;
-        top: -50px;   /* how far above the bar */
-        right: 30px;  /* hangs from the right side */
-        width: 60px;
+        top: 100%;    /* directly below the search bar */
+        left: 50%;    /* center under the bar */
+        transform: translateX(-50%);
+        width: 90px;  /* make it larger */
         pointer-events: none;
 
         animation: sway 2.5s ease-in-out infinite;
-        transform-origin: top center; /* swing point */
+        transform-origin: top center;
       }
 
       @keyframes sway {
-        0%   { transform: rotate(5deg); }
-        50%  { transform: rotate(-5deg); }
-        100% { transform: rotate(5deg); }
+        0%   { transform: translateX(-50%) rotate(6deg); }
+        50%  { transform: translateX(-50%) rotate(-6deg); }
+        100% { transform: translateX(-50%) rotate(6deg); }
       }
 
       /* Recipe gallery */
@@ -147,7 +148,7 @@
       </ul>
     </nav>
 
-    <!-- Search bar -->
+    <!-- Search bar with dangling cherries -->
     <div class="search-container">
       <div class="search-box">
         <input type="text" placeholder="Search recipes..." />
