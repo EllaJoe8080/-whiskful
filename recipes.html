@@ -8,19 +8,54 @@
       :root { --brand:#ff7a59; --bg:#fff8f3; --pin:#e60023; }
       * { box-sizing: border-box; margin: 0; padding: 0; }
 
-     body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  color:#222;
-  background: var(--bg) url("/images/fall-bg.gif") repeat;
-  background-size: 200px;   /* make the leaves smaller */
-  background-attachment: fixed;  /* stay still while scrolling */
-  opacity: 0.95;  /* keep cozy feel */
-}
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        color:#222;
+        background: var(--bg);
+        /* no tiled GIF; we’ll use a subtle animated layer instead */
+      }
+
+      /* ===== Floating Leaves (cozy + light) ===== */
+      #leaf-layer{
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;               /* behind the UI */
+        overflow: hidden;
+      }
 
       /* keep content above background */
       nav, .search-wrap, .grid { position: relative; z-index: 1; }
 
-      /* Navbar */
+      /* a single falling leaf */
+      .leaf {
+        position: absolute;
+        top: -12vh;               /* start slightly above the viewport */
+        left: var(--start, 50vw); /* set per-leaf in JS */
+        transform: translate(0, -10vh);
+        animation: fall var(--dur, 8s) linear forwards;
+        opacity: 0.85;
+        filter: drop-shadow(0 3px 6px rgba(0,0,0,.15));
+      }
+
+      .leaf img{
+        width: var(--size, 44px); /* set per-leaf in JS */
+        height: auto;
+        animation: sway 2.6s ease-in-out infinite alternate;
+        will-change: transform;
+      }
+
+      /* vertical fall + slight horizontal drift */
+      @keyframes fall { to { transform: translate(var(--dx, 80px), 110vh); } }
+      /* gentle twirl */
+      @keyframes sway { from { transform: rotate(-10deg); } to { transform: rotate(14deg); } }
+
+      /* Respect reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        #leaf-layer { display: none; }
+      }
+
+      /* ===== Navbar ===== */
       nav {
         position:sticky; top:0; z-index:10;
         height:72px; padding:0 24px; background:#fff;
@@ -32,7 +67,7 @@
       nav a { text-decoration:none; font-weight:600; color:#333; }
       nav a:hover { color:var(--brand); }
 
-      /* Search */
+      /* ===== Search ===== */
       .search-wrap { display:flex; justify-content:center; margin:28px 0 8px; }
       .search-box { position:relative; width:min(640px,92%); }
       .search-box input {
@@ -49,11 +84,8 @@
         pointer-events:none; transform-origin:top center;
         animation:sway 2.5s ease-in-out infinite;
       }
-      @keyframes sway {
-        0%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} 100%{transform:rotate(6deg)}
-      }
 
-      /* Grid */
+      /* ===== Grid ===== */
       .grid {
         width:min(1100px,94%);
         margin:12px auto 64px;
@@ -77,32 +109,12 @@
         padding:4px;
       }
       .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-
-      /* Overlay for Save + Like */
-      .overlay {
-        position:absolute; inset:4px;
-        pointer-events:none; opacity:0; transition:opacity .2s ease;
-      }
-      .tile:hover .overlay { opacity:1; }
-
-      .save-btn, .icon-btn {
-        position:absolute; top:10px; pointer-events:auto;
-      }
-      .save-btn {
-        left:10px; border:0; border-radius:22px;
-        background:var(--pin); color:#fff; font-weight:700;
-        padding:8px 16px; font-size:14px;
-        box-shadow:0 4px 12px rgba(0,0,0,.25);
-        cursor:pointer;
-      }
-      .icon-btn {
-        right:10px; width:36px; height:36px; border-radius:50%;
-        display:grid; place-items:center; background:#fff; border:0; cursor:pointer;
-        box-shadow:0 3px 10px rgba(0,0,0,.2);
-      }
     </style>
   </head>
   <body>
+    <!-- Floating leaves layer (behind everything) -->
+    <div id="leaf-layer" aria-hidden="true"></div>
+
     <!-- Navbar -->
     <nav>
       <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
@@ -129,6 +141,7 @@
         </div>
         <a href="#"></a>
       </figure>
+
       <figure class="tile">
         <div class="thumb">
           <img src="/images/pumpkin cheesecake truffles.jpeg" alt="Pumpkin Cheesecake Truffles" />
@@ -136,5 +149,48 @@
         <a href="#"></a>
       </figure>
     </main>
+
+    <!-- Subtle falling leaves script -->
+    <script>
+      (function(){
+        const layer = document.getElementById('leaf-layer');
+        if(!layer) return;
+
+        // Change this path if your leaf gif/png is different:
+        const LEAF_SRC = '/images/Fall-Gif-unscreen.gif';
+
+        function spawnLeaf(){
+          // keep it light
+          if(layer.childElementCount > 5) return;
+
+          const leaf = document.createElement('div');
+          leaf.className = 'leaf';
+
+          // randomize
+          const start = Math.random() * 100;                    // vw
+          const dx    = (Math.random() * 160 - 80) + 'px';      // -80..+80px drift
+          const dur   = (7 + Math.random() * 6) + 's';          // 7..13s
+          const size  = (30 + Math.random() * 22) + 'px';       // 30..52px
+
+          leaf.style.setProperty('--start', start + 'vw');
+          leaf.style.setProperty('--dx', dx);
+          leaf.style.setProperty('--dur', dur);
+          leaf.style.setProperty('--size', size);
+
+          const img = document.createElement('img');
+          img.src = LEAF_SRC;
+          img.alt = '';
+          leaf.appendChild(img);
+
+          leaf.addEventListener('animationend', () => leaf.remove(), { once:true });
+          layer.appendChild(leaf);
+        }
+
+        // spawn one now, then every ~5 seconds
+        spawnLeaf();
+        const interval = setInterval(spawnLeaf, 5000);
+        window.addEventListener('beforeunload', () => clearInterval(interval));
+      })();
+    </script>
   </body>
 </html>
