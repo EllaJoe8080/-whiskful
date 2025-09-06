@@ -7,13 +7,17 @@
     <style>
       :root { --brand:#ff7a59; --bg:#fff8f3; --pin:#e60023; }
       * { box-sizing: border-box; margin: 0; padding: 0; }
-
-     body {
+<div class="falling-leaves">
+  <img src="/images/Fall-Gif-unscreen.gif" class="leaf" />
+  <img src="/images/Fall-Gif-unscreen.gif" class="leaf" />
+  <img src="/images/Fall-Gif-unscreen.gif" class="leaf" />
+</div>
+      
+  body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  background: var(--bg) url("/images/fall-bg.gif") repeat;
-  background-size: 200px 200px;  /* adjust size of each GIF tile */
-  background-attachment: fixed;  /* makes it stay still while scrolling */
+  background: var(--bg);
   color:#222;
+  overflow-x: hidden; /* prevent scrollbars */
 }
 
       /* Navbar */
