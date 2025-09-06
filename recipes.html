@@ -164,8 +164,8 @@
     maxInterval: 3800,
     minDur: 6000,
     maxDur: 10000,
-    minSize: 22,
-    maxSize: 48,
+    minSize: 60,
+    maxSize: 120,
     minAmp: 25,
     maxAmp: 80,
     maxConcurrent: 3
@@ -178,22 +178,8 @@
 
   /* 🍁 Cozy Leaf Set (Maple, Oak, Ginkgo) */
   const LEAVES = [
-    // Maple
-    `data:image/svg+xml;utf8,
-      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
-        <path fill='%23D35400' d='M32 2l6 12h12l-8 10 8 10h-12l-6 12-6-12h-12l8-10-8-10h12z'/>
-      </svg>`,
-    // Oak
-    `data:image/svg+xml;utf8,
-      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
-        <path fill='%23A04000' d='M22 4c6 2 10 8 10 14s-4 12-10 14c6 2 10 8 10 14s-4 12-10 14c-6-2-10-8-10-14s4-12 10-14c-6-2-10-8-10-14s4-12 10-14z'/>
-      </svg>`,
-    // Ginkgo
-    `data:image/svg+xml;utf8,
-      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
-        <path fill='%23F1C40F' d='M32 2c12 0 22 10 22 22s-10 20-22 38c-12-18-22-26-22-38s10-22 22-22z'/>
-      </svg>`
-  ];
+  "/images/leaves.png"   // your uploaded picture
+];
 
   const rand = (min, max) => Math.random() * (max - min) + min;
 
