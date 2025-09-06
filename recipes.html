@@ -1,237 +1,235 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Whiskful Recipes</title>
-    <style>
-      :root { --brand:#ff7a59; --bg:#fff8f3; --pin:#e60023; }
-      * { box-sizing: border-box; margin: 0; padding: 0; }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Whiskful Recipes</title>
+  <style>
+    :root { --brand:#ff7a59; --bg:#fff8f3; --pin:#e60023; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-      body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  color:#222;
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:#222;
+      background: var(--bg);
+    }
 
-  /* use your gif as background */
-  background: var(--bg) url("/images/fall-bg.gif") repeat;
-  background-size: cover;   /* fill screen */
-  background-attachment: fixed; /* stay still while scrolling */
-}
+    /* Keep content above the leaves */
+    nav, .search-wrap, .grid { position: relative; z-index: 1; }
 
-      /* keep content above the background leaves */
-      nav, .search-wrap, .grid { position: relative; z-index: 1; }
+    /* Navbar */
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      height: 72px; padding: 0 24px; background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    nav img.logo { max-height: 140px; width: auto; display: block; }
+    nav ul { list-style: none; display: flex; gap: 24px; }
+    nav a { text-decoration: none; font-weight: 600; color: #333; }
+    nav a:hover { color: var(--brand); }
 
-      /* Navbar */
-      nav {
-        position:sticky; top:0; z-index:10;
-        height:72px; padding:0 24px; background:#fff;
-        box-shadow:0 2px 8px rgba(0,0,0,.06);
-        display:flex; align-items:center; justify-content:space-between;
-      }
-      nav img.logo { max-height:140px; width:auto; display:block; }
-      nav ul { list-style:none; display:flex; gap:24px; }
-      nav a { text-decoration:none; font-weight:600; color:#333; }
-      nav a:hover { color:var(--brand); }
+    /* Search */
+    .search-wrap { display: flex; justify-content: center; margin: 28px 0 8px; }
+    .search-box { position: relative; width: min(640px,92%); }
+    .search-box input {
+      width: 100%; padding: 12px 16px;
+      border: 2px solid var(--brand); border-radius: 999px;
+      font-size: 16px; background: #fff; outline: none;
+    }
+    .search-box input:focus { border-color:#ff5a36; box-shadow:0 0 8px rgba(255,122,89,.3); }
+    .dangling-gif {
+      position: absolute; top: -22px; right: -20px; width: 100px;
+      pointer-events: none; transform-origin: top center;
+      animation: sway 2.5s ease-in-out infinite;
+    }
+    @keyframes sway { 0%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} 100%{transform:rotate(6deg)} }
 
-      /* Search */
-      .search-wrap { display:flex; justify-content:center; margin:28px 0 8px; }
-      .search-box { position:relative; width:min(640px,92%); }
-      .search-box input {
-        width:100%; padding:12px 16px;
-        border:2px solid var(--brand); border-radius:999px;
-        font-size:16px; background:#fff;
-      }
-      .search-box input:focus {
-        border-color:#ff5a36; box-shadow:0 0 8px rgba(255,122,89,.3);
-        outline: none;
-      }
-      .dangling-gif {
-        position:absolute; top:-22px; right:-20px; width:100px;
-        pointer-events:none; transform-origin:top center;
-        animation:sway 2.5s ease-in-out infinite;
-      }
-      @keyframes sway { 0%{transform:rotate(6deg)} 50%{transform:rotate(-6deg)} 100%{transform:rotate(6deg)} }
+    /* Grid */
+    .grid {
+      width: min(1100px,94%);
+      margin: 12px auto 64px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+    }
+    .tile {
+      background: #fff; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,.05);
+      transition: transform .15s ease, box-shadow .15s ease;
+      position: relative;
+    }
+    .tile:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
+    .thumb { aspect-ratio: 2/3; background:#fafafa; display:flex; align-items:center; justify-content:center; padding:4px; }
+    .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
 
-      /* Grid */
-      .grid {
-        width:min(1100px,94%);
-        margin:12px auto 64px;
-        display:grid;
-        grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
-        gap:12px;
-      }
-      .tile {
-        background:#fff; border-radius:8px; overflow:hidden;
-        box-shadow:0 1px 6px rgba(0,0,0,.05);
-        transition:transform .15s ease, box-shadow .15s ease;
-        position:relative;
-      }
-      .tile:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.12); }
-      .thumb {
-        aspect-ratio:2/3;
-        background:#fafafa;
-        display:flex; align-items:center; justify-content:center;
-        padding:4px;
-      }
-      .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    /* ===== Floating/Falling Leaves Layer ===== */
+    #leaf-layer {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .leaf {
+      --size: 30px;
+      position: absolute; top: -12vh;
+      width: var(--size); height: var(--size);
+      opacity: 0; will-change: transform, opacity;
+      filter: drop-shadow(0 3px 3px rgba(0,0,0,.12));
+      animation:
+        fall var(--dur) linear var(--delay) forwards,
+        drift var(--dur) ease-in-out var(--delay) forwards,
+        spin var(--dur) linear var(--delay) forwards;
+    }
+    @keyframes fall {
+      0%   { transform: translate(var(--start-x), -12vh); opacity: 0; }
+      5%   { opacity: .95; }
+      100% { transform: translate(var(--end-x), 112vh); opacity: 0; }
+    }
+    @keyframes drift {
+      0%   { }
+      50%  { transform: translate(calc(var(--start-x) + var(--amp)), 50vh); }
+      100% { transform: translate(var(--end-x), 112vh); }
+    }
+    @keyframes spin {
+      0%   { rotate: var(--rot-start); }
+      100% { rotate: var(--rot-end); }
+    }
+    @media (prefers-reduced-motion: reduce) { .leaf { animation: none !important; opacity: 0; } }
+  </style>
+</head>
+<body>
+  <!-- Falling leaves background -->
+  <div id="leaf-layer" aria-hidden="true"></div>
 
-      /* ===== Floating leaves (working version) ===== */
-      #leaf-layer{
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;               /* behind UI */
-        overflow: hidden;
-      }
+  <!-- Navbar -->
+  <nav>
+    <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
+    <ul>
+      <li><a href="recipes.html">Recipes</a></li>
+      <li><a href="#">Community</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+  </nav>
 
-      .leaf{
-        position: absolute;
-        top: -12vh;               /* start above view */
-        left: var(--start, 50vw); /* set in JS */
-        width: var(--size, 44px);
-        height: var(--size, 44px);
-        opacity: .9;
-        filter: drop-shadow(0 3px 6px rgba(0,0,0,.15));
-        /* ONLY the vertical fall here */
-        animation: fall var(--dur, 10s) linear forwards;
-        will-change: transform, opacity;
-      }
-
-      /* sway/rotation on the INNER img */
-      .leaf img{
-        width: 100%;
-        height: 100%;
-        display: block;
-        transform-origin: 50% 20%;
-        animation: sway 2.8s ease-in-out infinite alternate;
-      }
-
-      @keyframes fall{
-        from { transform: translate(0, -12vh); opacity: .9; }
-        to   { transform: translate(var(--dx, 80px), 110vh); opacity: .6; }
-      }
-
-      @keyframes sway{
-        from { transform: rotate(-10deg); }
-        to   { transform: rotate(12deg); }
-      }
-
-      @media (prefers-reduced-motion: reduce){
-        #leaf-layer{ display:none; }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Falling leaves background layer -->
-    <div id="leaf-layer" aria-hidden="true"></div>
-
-    <!-- Navbar -->
-    <nav>
-      <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
-      <ul>
-        <li><a href="recipes.html">Recipes</a></li>
-        <li><a href="#">Community</a></li>
-        <li><a href="#">About</a></li>
-      </ul>
-    </nav>
-
-    <!-- Search -->
-    <div class="search-wrap">
-      <div class="search-box">
-        <input type="text" placeholder="Search recipes..." />
-        <img src="/images/cherries.gif" alt="" class="dangling-gif" />
-      </div>
+  <!-- Search -->
+  <div class="search-wrap">
+    <div class="search-box">
+      <input type="text" placeholder="Search recipes..." />
+      <img src="/images/cherries.gif" alt="" class="dangling-gif" />
     </div>
+  </div>
 
-    <!-- Grid -->
-    <main class="grid">
-      <figure class="tile">
-        <div class="thumb">
-          <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll" />
-        </div>
-        <a href="#"></a>
-      </figure>
+  <!-- Grid -->
+  <main class="grid">
+    <figure class="tile">
+      <div class="thumb">
+        <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll"/>
+      </div>
+      <a href="#"></a>
+    </figure>
 
-      <figure class="tile">
-        <div class="thumb">
-          <img src="/images/pumpkin cheesecake truffles.jpeg" alt="Pumpkin Cheesecake Truffles" />
-        </div>
-        <a href="#"></a>
-      </figure>
-    </main>
+    <figure class="tile">
+      <div class="thumb">
+        <img src="/images/pumpkin cheesecake truffles.jpeg" alt="Pumpkin Cheesecake Truffles"/>
+      </div>
+      <a href="#"></a>
+    </figure>
+  </main>
 
-    <!-- Subtle falling leaves script -->
-    <script>
-(() => {
-  const CONFIG = {
-    minInterval: 2200,
-    maxInterval: 3800,
-    minDur: 6000,
-    maxDur: 10000,
-    minSize: 60,
-    maxSize: 120,
-    minAmp: 25,
-    maxAmp: 80,
-    maxConcurrent: 3
-  };
+  <!-- Cozy maple leaves (colors/shapes like your GIF) -->
+  <script>
+    (() => {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
 
-  const layer = document.getElementById('leaf-layer');
-  if (!layer) return;
+      const layer = document.getElementById('leaf-layer');
+      if (!layer) return;
 
-  let liveLeaves = 0;
+      // Three cute maple styles (warm orange/red palette)
+      const LEAVES = [
+        `data:image/svg+xml;utf8,
+          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+            <path fill='%23ff8a3d' d='M10 40c4-14 20-28 35-26 11 2 15 12 10 22-6 13-23 18-34 16-7-2-12-6-11-12z'/>
+            <path fill='none' stroke='%23b5531d' stroke-width='3' d='M12 40c10 3 22 1 31-6'/>
+            <path fill='none' stroke='%23b5531d' stroke-width='3' d='M25 26c3 7 8 13 12 19'/>
+          </svg>`,
+        `data:image/svg+xml;utf8,
+          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+            <path fill='%23f04d2f' d='M8 36c6-12 20-22 32-21 9 1 14 8 11 16-4 12-18 19-29 18-7-1-13-5-14-13z'/>
+            <path fill='none' stroke='%23932016' stroke-width='3' d='M10 36c9 2 20 0 28-6'/>
+            <path fill='none' stroke='%23932016' stroke-width='3' d='M24 25c3 6 8 12 12 18'/>
+          </svg>`,
+        `data:image/svg+xml;utf8,
+          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+            <path fill='%23ffb84d' d='M12 38c4-13 18-24 30-23 9 1 13 8 10 15-4 11-17 18-27 18-7 0-12-4-13-10z'/>
+            <path fill='none' stroke='%23a06a15' stroke-width='3' d='M14 38c8 3 18 1 26-5'/>
+            <path fill='none' stroke='%23a06a15' stroke-width='3' d='M24 28c3 6 7 12 11 18'/>
+          </svg>`
+      ];
 
-  /* 🍁 Cozy Leaf Set (Maple, Oak, Ginkgo) */
-  const LEAVES = [
-  "/images/leaves.png"   // your uploaded picture
-];
+      // Tunable “feel”
+      const CONFIG = {
+        // spawn frequency (lower = fewer leaves)
+        minInterval: 1600,  // faster spawning
+        maxInterval: 3000,
+        // fall duration (lower = faster fall)
+        minDur: 7500,
+        maxDur: 12000,
+        // size & drift
+        minSize: 22, maxSize: 44,
+        minAmp: 20,  maxAmp: 80,
+        // keep it cozy—not too many at once
+        maxConcurrent: 3
+      };
 
-  const rand = (min, max) => Math.random() * (max - min) + min;
+      let live = 0;
+      const rand = (a,b)=>Math.random()*(b-a)+a;
 
-  function spawnLeaf() {
-    if (liveLeaves >= CONFIG.maxConcurrent) return;
+      function spawn() {
+        if (live >= CONFIG.maxConcurrent) return;
 
-    const leaf = document.createElement('img');
-    leaf.className = 'leaf';
-    leaf.src = LEAVES[Math.floor(Math.random() * LEAVES.length)];
+        const leaf = document.createElement('img');
+        leaf.className = 'leaf';
+        leaf.src = LEAVES[Math.floor(Math.random()*LEAVES.length)];
 
-    const size  = rand(CONFIG.minSize, CONFIG.maxSize);
-    const dur   = rand(CONFIG.minDur, CONFIG.maxDur);
-    const startX = rand(0, window.innerWidth);
-    const endX   = startX + rand(-120, 120);
-    const amp    = rand(CONFIG.minAmp, CONFIG.maxAmp);
+        const size    = rand(CONFIG.minSize, CONFIG.maxSize);
+        const dur     = rand(CONFIG.minDur, CONFIG.maxDur);
+        const startX  = rand(0, innerWidth);
+        const endX    = startX + rand(-140, 140);
+        const amp     = rand(CONFIG.minAmp, CONFIG.maxAmp);
+        const delay   = 0;
 
-    const rotStart = `${rand(-25, 25)}deg`;
-    const rotMid   = `${rand(-10, 10)}deg`;
-    const rotEnd   = `${rand(-30, 30)}deg`;
+        // gentle rotation
+        const rotStart = `${rand(-25, 25)}deg`;
+        const rotEnd   = `${rand(-360, 360)}deg`;
 
-    leaf.style.setProperty('--size', `${size}px`);
-    leaf.style.setProperty('--dur',  `${dur}ms`);
-    leaf.style.setProperty('--delay', `0ms`);
-    leaf.style.setProperty('--start-x', `${startX}px`);
-    leaf.style.setProperty('--end-x', `${endX}px`);
-    leaf.style.setProperty('--amp', `${amp}px`);
-    leaf.style.setProperty('--rot-start', rotStart);
-    leaf.style.setProperty('--rot-mid', rotMid);
-    leaf.style.setProperty('--rot-end', rotEnd);
-    leaf.style.left = `${startX}px`;
+        leaf.style.setProperty('--size', `${size}px`);
+        leaf.style.setProperty('--dur', `${dur}ms`);
+        leaf.style.setProperty('--delay', `${delay}ms`);
+        leaf.style.setProperty('--start-x', `${startX}px`);
+        leaf.style.setProperty('--end-x', `${endX}px`);
+        leaf.style.setProperty('--amp', `${amp}px`);
+        leaf.style.setProperty('--rot-start', rotStart);
+        leaf.style.setProperty('--rot-end', rotEnd);
+        leaf.style.left = `${startX}px`;
 
-    liveLeaves++;
-    leaf.addEventListener('animationend', () => {
-      leaf.remove();
-      liveLeaves--;
-    });
+        leaf.addEventListener('animationend', () => { leaf.remove(); live--; }, {once:true});
 
-    layer.appendChild(leaf);
-  }
+        live++;
+        layer.appendChild(leaf);
+      }
 
-  function loop() {
-    spawnLeaf();
-    const next = rand(CONFIG.minInterval, CONFIG.maxInterval);
-    setTimeout(loop, next);
-  }
+      function loop() {
+        spawn();
+        setTimeout(loop, rand(CONFIG.minInterval, CONFIG.maxInterval));
+      }
 
-  requestAnimationFrame(loop);
-})();
-</script>
-  </body>
+      // kick off
+      requestAnimationFrame(loop);
+
+      // keep positions sensible on resize
+      addEventListener('resize', () => {
+        // optional: nothing needed; new leaves use new width
+      });
+    })();
+  </script>
+</body>
 </html>
