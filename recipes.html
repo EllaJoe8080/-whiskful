@@ -9,10 +9,14 @@
       * { box-sizing: border-box; margin: 0; padding: 0; }
 
       body {
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-        color:#222;
-        background: var(--bg);
-      }
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color:#222;
+
+  /* use your gif as background */
+  background: var(--bg) url("/images/fall-bg.gif") repeat;
+  background-size: cover;   /* fill screen */
+  background-attachment: fixed; /* stay still while scrolling */
+}
 
       /* keep content above the background leaves */
       nav, .search-wrap, .grid { position: relative; z-index: 1; }
