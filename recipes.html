@@ -158,70 +158,90 @@
 
     <!-- Subtle falling leaves script -->
     <script>
-      (() => {
-        const CONFIG = {
-          minInterval: 2200,
-          maxInterval: 3800,
-          minDur: 9000,
-          maxDur: 14000,
-          minSize: 18,
-          maxSize: 42,
-          maxConcurrent: 2
-        };
+(() => {
+  const CONFIG = {
+    minInterval: 2200,
+    maxInterval: 3800,
+    minDur: 9000,
+    maxDur: 14000,
+    minSize: 22,
+    maxSize: 48,
+    minAmp: 25,
+    maxAmp: 80,
+    maxConcurrent: 3
+  };
 
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const layer = document.getElementById('leaf-layer');
+  if (!layer) return;
 
-        const layer = document.getElementById('leaf-layer');
-        if (!layer) return;
+  let liveLeaves = 0;
 
-        let live = 0;
+  /* 🍁 Cozy Leaf Set (Maple, Oak, Ginkgo) */
+  const LEAVES = [
+    // Maple
+    `data:image/svg+xml;utf8,
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+        <path fill='%23D35400' d='M32 2l6 12h12l-8 10 8 10h-12l-6 12-6-12h-12l8-10-8-10h12z'/>
+      </svg>`,
+    // Oak
+    `data:image/svg+xml;utf8,
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+        <path fill='%23A04000' d='M22 4c6 2 10 8 10 14s-4 12-10 14c6 2 10 8 10 14s-4 12-10 14c-6-2-10-8-10-14s4-12 10-14c-6-2-10-8-10-14s4-12 10-14z'/>
+      </svg>`,
+    // Ginkgo
+    `data:image/svg+xml;utf8,
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+        <path fill='%23F1C40F' d='M32 2c12 0 22 10 22 22s-10 20-22 38c-12-18-22-26-22-38s10-22 22-22z'/>
+      </svg>`
+  ];
 
-        // tiny inline SVG leaves (transparent)
-        const LEAVES = [
-          `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path fill='%23F39C12' d='M8 38c2-15 19-30 33-28 10 1 15 9 13 18-3 12-18 20-30 20-8 0-14-4-16-10z'/><path fill='none' stroke='%238A4B08' stroke-width='3' d='M9 38c9 3 21 1 31-6'/><path fill='none' stroke='%238A4B08' stroke-width='3' d='M25 26c4 7 9 13 13 20'/></svg>`,
-          `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path fill='%23E74C3C' d='M12 34c4-12 18-22 30-22 9 0 14 6 12 14-2 10-15 18-26 18-7 0-13-3-16-10z'/><path fill='none' stroke='%238B1E14' stroke-width='3' d='M14 34c8 2 18 0 26-5'/><path fill='none' stroke='%238B1E14' stroke-width='3' d='M24 24c3 6 8 11 12 16'/></svg>`,
-          `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path fill='%23F1C40F' d='M10 36c3-13 17-25 29-24 9 1 14 8 12 16-3 11-16 19-27 19-7 0-12-4-14-11z'/><path fill='none' stroke='%238A6C00' stroke-width='3' d='M12 36c8 3 19 1 27-6'/><path fill='none' stroke='%238A6C00' stroke-width='3' d='M23 27c3 6 7 12 11 18'/></svg>`
-        ];
+  const rand = (min, max) => Math.random() * (max - min) + min;
 
-        const rand = (a,b) => Math.random()*(b-a)+a;
+  function spawnLeaf() {
+    if (liveLeaves >= CONFIG.maxConcurrent) return;
 
-        function spawnLeaf(){
-          if (live >= CONFIG.maxConcurrent) return;
+    const leaf = document.createElement('img');
+    leaf.className = 'leaf';
+    leaf.src = LEAVES[Math.floor(Math.random() * LEAVES.length)];
 
-          // wrapper
-          const leaf = document.createElement('div');
-          leaf.className = 'leaf';
+    const size  = rand(CONFIG.minSize, CONFIG.maxSize);
+    const dur   = rand(CONFIG.minDur, CONFIG.maxDur);
+    const startX = rand(0, window.innerWidth);
+    const endX   = startX + rand(-120, 120);
+    const amp    = rand(CONFIG.minAmp, CONFIG.maxAmp);
 
-          // inner image (handles the sway/rotation)
-          const img = document.createElement('img');
-          img.src = LEAVES[Math.floor(Math.random()*LEAVES.length)];
-          img.alt = '';
-          leaf.appendChild(img);
+    const rotStart = `${rand(-25, 25)}deg`;
+    const rotMid   = `${rand(-10, 10)}deg`;
+    const rotEnd   = `${rand(-30, 30)}deg`;
 
-          const size  = rand(CONFIG.minSize, CONFIG.maxSize);
-          const dur   = rand(CONFIG.minDur, CONFIG.maxDur);
-          const dx    = (Math.random()*160 - 80) + 'px';  // -80..+80
-          const start = Math.random() * 100;               // vw
+    leaf.style.setProperty('--size', `${size}px`);
+    leaf.style.setProperty('--dur',  `${dur}ms`);
+    leaf.style.setProperty('--delay', `0ms`);
+    leaf.style.setProperty('--start-x', `${startX}px`);
+    leaf.style.setProperty('--end-x', `${endX}px`);
+    leaf.style.setProperty('--amp', `${amp}px`);
+    leaf.style.setProperty('--rot-start', rotStart);
+    leaf.style.setProperty('--rot-mid', rotMid);
+    leaf.style.setProperty('--rot-end', rotEnd);
+    leaf.style.left = `${startX}px`;
 
-          leaf.style.setProperty('--size', size + 'px');
-          leaf.style.setProperty('--dur',  dur + 'ms');
-          leaf.style.setProperty('--dx',   dx);
-          leaf.style.setProperty('--start', start + 'vw');
-          leaf.style.left = start + 'vw';
+    liveLeaves++;
+    leaf.addEventListener('animationend', () => {
+      leaf.remove();
+      liveLeaves--;
+    });
 
-          live++;
-          leaf.addEventListener('animationend', () => { leaf.remove(); live--; }, { once:true });
+    layer.appendChild(leaf);
+  }
 
-          layer.appendChild(leaf);
-        }
+  function loop() {
+    spawnLeaf();
+    const next = rand(CONFIG.minInterval, CONFIG.maxInterval);
+    setTimeout(loop, next);
+  }
 
-        function loop(){
-          spawnLeaf();
-          setTimeout(loop, rand(CONFIG.minInterval, CONFIG.maxInterval));
-        }
-
-        requestAnimationFrame(loop);
-      })();
-    </script>
+  requestAnimationFrame(loop);
+})();
+</script>
   </body>
 </html>
