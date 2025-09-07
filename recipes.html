@@ -145,40 +145,39 @@
 
       // Three cute maple styles (warm orange/red palette)
       const LEAVES = [
-        `data:image/svg+xml;utf8,
-          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
-            <path fill='%23ff8a3d' d='M10 40c4-14 20-28 35-26 11 2 15 12 10 22-6 13-23 18-34 16-7-2-12-6-11-12z'/>
-            <path fill='none' stroke='%23b5531d' stroke-width='3' d='M12 40c10 3 22 1 31-6'/>
-            <path fill='none' stroke='%23b5531d' stroke-width='3' d='M25 26c3 7 8 13 12 19'/>
-          </svg>`,
-        `data:image/svg+xml;utf8,
-          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
-            <path fill='%23f04d2f' d='M8 36c6-12 20-22 32-21 9 1 14 8 11 16-4 12-18 19-29 18-7-1-13-5-14-13z'/>
-            <path fill='none' stroke='%23932016' stroke-width='3' d='M10 36c9 2 20 0 28-6'/>
-            <path fill='none' stroke='%23932016' stroke-width='3' d='M24 25c3 6 8 12 12 18'/>
-          </svg>`,
-        `data:image/svg+xml;utf8,
-          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
-            <path fill='%23ffb84d' d='M12 38c4-13 18-24 30-23 9 1 13 8 10 15-4 11-17 18-27 18-7 0-12-4-13-10z'/>
-            <path fill='none' stroke='%23a06a15' stroke-width='3' d='M14 38c8 3 18 1 26-5'/>
-            <path fill='none' stroke='%23a06a15' stroke-width='3' d='M24 28c3 6 7 12 11 18'/>
-          </svg>`
-      ];
+  // Deep orange
+  `data:image/svg+xml;utf8,
+   <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'>
+     <path fill='%23FF5A2A' d='M63 9l6 18 18-6-9 15 16 8-17 5 8 18-19-7-6 19-6-19-19 7 8-18-17-5 16-8-9-15 18 6z'/>
+     <path fill='none' stroke='%23C43E1B' stroke-width='4' d='M63 9c1 22 1 45-6 70'/>
+   </svg>`,
 
-      // Tunable “feel”
+  // Mid orange
+  `data:image/svg+xml;utf8,
+   <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'>
+     <path fill='%23FF8A3D' d='M60 12l8 17 19-4-10 14 15 10-18 3 6 18-17-9-10 16-4-18-18 6 11-15-16-10 18-2-5-18 16 10z'/>
+     <path fill='none' stroke='%23B85B21' stroke-width='4' d='M60 12c0 20 0 42-8 66'/>
+   </svg>`,
+
+  // Golden yellow
+  `data:image/svg+xml;utf8,
+   <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'>
+     <path fill='%23FFC02E' d='M63 14l7 16 17-5-8 14 15 9-17 4 5 17-16-8-8 16-5-17-16 7 8-15-16-8 18-3-6-16 15 9z'/>
+     <path fill='none' stroke='%238A6C00' stroke-width='4' d='M63 14c-1 20-3 41-11 64'/>
+   </svg>`
+];
+
       const CONFIG = {
-        // spawn frequency (lower = fewer leaves)
-        minInterval: 1600,  // faster spawning
-        maxInterval: 3000,
-        // fall duration (lower = faster fall)
-        minDur: 7500,
-        maxDur: 12000,
-        // size & drift
-        minSize: 22, maxSize: 44,
-        minAmp: 20,  maxAmp: 80,
-        // keep it cozy—not too many at once
-        maxConcurrent: 3
-      };
+  minInterval: 1600,   // was 2200
+  maxInterval: 3000,   // was 3800
+  minDur: 7000,        // was 9000
+  maxDur: 11000,       // was 14000
+  minSize: 18,
+  maxSize: 42,
+  minAmp: 20,
+  maxAmp: 70,
+  maxConcurrent: 2
+};
 
       let live = 0;
       const rand = (a,b)=>Math.random()*(b-a)+a;
