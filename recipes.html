@@ -248,16 +248,16 @@
   ];
 
   const CFG = {
-    minInterval: 1600,  // spawn every 1.6–3.0s
-    maxInterval: 3000,
-    minDur: 7000,       // each leaf falls for 7–11s
-    maxDur: 11000,
-    minSize: 24,        // px
-    maxSize: 48,
-    minAmp: 20,         // horizontal sway in px
-    maxAmp: 70,
-    maxConcurrent: 2    // keep cozy, raise to 3+ for more
-  };
+  minInterval: 300,
+  maxInterval: 700,
+  minDur: 4000,
+  maxDur: 7000,
+  minSize: 32,
+  maxSize: 64,
+  minAmp: 20,
+  maxAmp: 70,
+  maxConcurrent: 4
+};
 
   let live = 0;
   const rand = (a,b) => Math.random()*(b-a)+a;
