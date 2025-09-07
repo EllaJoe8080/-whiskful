@@ -149,6 +149,16 @@
 @media (prefers-reduced-motion: reduce){
   .leaf{ animation: none !important; opacity: 0; }
 }
+      /* Active states */
+.save-btn.saved {
+  background: #16a34a;   /* green when saved */
+  box-shadow: 0 4px 12px rgba(22,163,74,.25);
+}
+
+.icon-btn.liked svg path {
+  fill: red;              /* heart fills when liked */
+  stroke: red;
+}
     </style>
   </head>
   <body>
@@ -175,51 +185,56 @@
     <!-- Grid -->
     <main class="grid">
       <!-- pistachio-chocolate-roll -->
-      <figure class="tile">
-        <div class="thumb">
-          <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll" loading="lazy" />
-        </div>
-        <!-- Hover overlay -->
-        <div class="overlay">
-          <button class="save-btn">Save</button>
-          <button class="icon-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="red" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M12 21s-6.5-4.35-9.33-7.64C-1.17 9.1 2.5 3 7.5 5.09 9.24 5.83 12 9 12 9s2.76-3.17 4.5-3.91c5-2.09 8.67 4.01 4.83 8.27C18.5 16.65 12 21 12 21z"/>
-            </svg>
-          </button>
-        </div>
-        <a href="#"></a>
-      </figure>
+      <figure class="tile" data-id="pistachio-roll">
+  <div class="thumb">
+    <img src="/images/pistachio-chocolate-roll.png" alt="Pistachio Chocolate Swiss Roll" loading="lazy" />
+  </div>
+
+  <div class="overlay">
+    <button class="save-btn" type="button" aria-pressed="false">Save</button>
+    <button class="icon-btn" type="button" aria-pressed="false" aria-label="Like">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+        <path d="M12 21s-6.5-4.35-9.33-7.64C-1.17 9.1 2.5 3 7.5 5.09 9.24 5.83 12 9 12 9s2.76-3.17 4.5-3.91c5-2.09 8.67 4.01 4.83 8.27C18.5 16.65 12 21 12 21z"
+              fill="none" stroke="red" stroke-width="2"/>
+      </svg>
+    </button>
+  </div>
+
+  <a href="#"></a>
+</figure>
  <!-- Pumpkin Cheesecake Truffles -->
-  <figure class="tile">
-    <div class="thumb">
-      <img src="/images/pumpkin cheesecake truffles.jpeg" alt="Pumpkin Cheesecake Truffles" loading="lazy" />
-    </div>
-    <div class="overlay">
-      <button class="save-btn">Save</button>
-      <button class="icon-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="red" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M12 21s-6.5-4.35-9.33-7.64C-1.17 9.1 2.5 3 7.5 5.09 9.24 5.83 12 9 12 9s2.76-3.17 4.5-3.91c5-2.09 8.67 4.01 4.83 8.27C18.5 16.65 12 21 12 21z"/>
-        </svg>
-      </button>
-    </div>
-    <a href="#"></a>
-  </figure>
+  <figure class="tile" data-id="pumpkin-truffles">
+  <div class="thumb">
+    <img src="/images/pumpkin cheesecake truffless.jpeg" alt="Pumpkin Cheesecake Truffles" loading="lazy" />
+  </div>
+  <div class="overlay">
+    <button class="save-btn" type="button" aria-pressed="false">Save</button>
+    <button class="icon-btn" type="button" aria-pressed="false" aria-label="Like">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+        <path d="M12 21s-6.5-4.35-9.33-7.64C-1.17 9.1 2.5 3 7.5 5.09 9.24 5.83 12 9 12 9s2.76-3.17 4.5-3.91c5-2.09 8.67 4.01 4.83 8.27C18.5 16.65 12 21 12 21z"
+              fill="none" stroke="red" stroke-width="2"/>
+      </svg>
+    </button>
+  </div>
+  <a href="#"></a>
+</figure>
  <!-- Strawberry Meringue kisses -->
-      <figure class="tile">
-        <div class="thumb">
-          <img src="/images/Strawberry Meringue kisses.jpeg" alt="Strawberry Meringue Kisses" loading="lazy" />
-        </div>
-        <div class="overlay">
-          <button class="save-btn">Save</button>
-          <button class="icon-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="red" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M12 21s-6.5-4.35-9.33-7.64C-1.17 9.1 2.5 3 7.5 5.09 9.24 5.83 12 9 12 9s2.76-3.17 4.5-3.91c5-2.09 8.67 4.01 4.83 8.27C18.5 16.65 12 21 12 21z"/>
-            </svg>
-          </button>
-        </div>
-        <a href="#"></a>
-      </figure>
+     <figure class="tile" data-id="strawberry-meringue">
+  <div class="thumb">
+    <img src="/images/Strawberry Meringue kisses.jpeg" alt="Strawberry Meringue Kisses" loading="lazy" />
+  </div>
+  <div class="overlay">
+    <button class="save-btn" type="button" aria-pressed="false">Save</button>
+    <button class="icon-btn" type="button" aria-pressed="false" aria-label="Like">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+        <path d="M12 21s-6.5-4.35-9.33-7.64C-1.17 9.1 2.5 3 7.5 5.09 9.24 5.83 12 9 12 9s2.76-3.17 4.5-3.91c5-2.09 8.67 4.01 4.83 8.27C18.5 16.65 12 21 12 21z"
+              fill="none" stroke="red" stroke-width="2"/>
+      </svg>
+    </button>
+  </div>
+  <a href="#"></a>
+</figure>
+      
     </main>
     <script>
 (() => {
@@ -286,6 +301,90 @@
     setTimeout(loop, rand(CFG.minInterval, CFG.maxInterval));
   }
   requestAnimationFrame(loop);
+})();
+</script>
+    <script>
+(() => {
+  const STORAGE_KEY = 'whiskful-tile-states';  // { [tileId]: { liked:bool, saved:bool } }
+
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch { return {}; }
+  }
+  function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  // Apply saved state on load
+  const state = loadState();
+  document.querySelectorAll('.tile[data-id]').forEach(tile => {
+    const id = tile.getAttribute('data-id');
+    const s = state[id] || {};
+    const saveBtn = tile.querySelector('.save-btn');
+    const likeBtn = tile.querySelector('.icon-btn');
+    const heartPath = likeBtn?.querySelector('svg path');
+
+    // Saved
+    if (s.saved) {
+      saveBtn?.classList.add('saved');
+      saveBtn?.setAttribute('aria-pressed', 'true');
+      if (saveBtn) saveBtn.textContent = 'Saved';
+    }
+
+    // Liked
+    if (s.liked) {
+      likeBtn?.classList.add('liked');
+      likeBtn?.setAttribute('aria-pressed', 'true');
+      if (heartPath) {
+        heartPath.setAttribute('fill', 'red');
+        heartPath.setAttribute('stroke', 'red');
+      }
+    }
+  });
+
+  // Click handling (event delegation)
+  document.addEventListener('click', (e) => {
+    const saveBtn = e.target.closest('.save-btn');
+    const likeBtn = e.target.closest('.icon-btn');
+
+    if (!saveBtn && !likeBtn) return;
+
+    const tile = e.target.closest('.tile[data-id]');
+    if (!tile) return;
+    const id = tile.getAttribute('data-id');
+    state[id] ||= { liked: false, saved: false };
+
+    // SAVE toggle
+    if (saveBtn) {
+      e.preventDefault();
+      const isSaved = saveBtn.classList.toggle('saved');
+      saveBtn.setAttribute('aria-pressed', String(isSaved));
+      saveBtn.textContent = isSaved ? 'Saved' : 'Save';
+      state[id].saved = isSaved;
+      saveState(state);
+      return;
+    }
+
+    // LIKE toggle
+    if (likeBtn) {
+      e.preventDefault();
+      const isLiked = likeBtn.classList.toggle('liked');
+      likeBtn.setAttribute('aria-pressed', String(isLiked));
+      const heartPath = likeBtn.querySelector('svg path');
+      if (heartPath) {
+        if (isLiked) {
+          heartPath.setAttribute('fill', 'red');
+          heartPath.setAttribute('stroke', 'red');
+        } else {
+          heartPath.setAttribute('fill', 'none');
+          heartPath.setAttribute('stroke', 'red');
+        }
+      }
+      state[id].liked = isLiked;
+      saveState(state);
+      return;
+    }
+  });
 })();
 </script>
   </body>
