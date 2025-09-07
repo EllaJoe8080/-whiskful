@@ -152,6 +152,11 @@
   100% { transform: translateX(calc(var(--amp) * -1)); }
 }
 
+@keyframes leaf-spin {
+  0%   { transform: rotate(var(--rot-start)); }
+  100% { transform: rotate(var(--rot-end)); }
+}
+
 /* accessibility */
 @media (prefers-reduced-motion: reduce){
   .leaf{ animation: none !important; opacity: 0; }
