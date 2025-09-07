@@ -140,19 +140,16 @@
     leaf-spin var(--dur) linear var(--delay) forwards;
 }
 
-@keyframes leaf-fall{
-  0%   { transform: translate(var(--start-x), -12vh); opacity: 0; }
-  5%   { opacity: .95; }
-  100% { transform: translate(var(--end-x), 112vh); opacity: 0; }
+@keyframes leaf-fall {
+  0%   { transform: translate(var(--start-x), -12vh) rotate(var(--rot-start)); opacity: 0; }
+  5%   { opacity: 1; }
+  100% { transform: translate(var(--end-x), 110vh) rotate(var(--rot-end)); opacity: 0; }
 }
-@keyframes leaf-drift{
-  0%   {}
-  50%  { transform: translate(calc(var(--start-x) + var(--amp)), 50vh); }
-  100% { transform: translate(var(--end-x), 112vh); }
-}
-@keyframes leaf-spin{
-  0%   { rotate: var(--rot-start); }
-  100% { rotate: var(--rot-end); }
+
+@keyframes leaf-drift {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(var(--amp)); }
+  100% { transform: translateX(calc(var(--amp) * -1)); }
 }
 
 /* accessibility */
@@ -252,8 +249,8 @@
   maxInterval: 700,
   minDur: 4000,
   maxDur: 7000,
-  minSize: 32,
-  maxSize: 64,
+  minSize: 48,
+  maxSize: 96,
   minAmp: 20,
   maxAmp: 70,
   maxConcurrent: 4
