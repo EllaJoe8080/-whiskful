@@ -115,9 +115,55 @@
         .grid { grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); }
         .dangling-gif { right:-34px; top:-16px; width:74px; }
       }
+      /* ---- Falling leaves layer ---- */
+#leaf-layer{
+  position: fixed;
+  inset: 0;
+  z-index: 0;            /* behind nav/grid */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* a single leaf */
+.leaf{
+  --size: 30px;
+  position: absolute;
+  top: -12vh;
+  width: var(--size);
+  height: var(--size);
+  opacity: 0;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 3px 3px rgba(0,0,0,.12));
+  animation:
+    leaf-fall var(--dur) linear var(--delay) forwards,
+    leaf-drift var(--dur) ease-in-out var(--delay) forwards,
+    leaf-spin var(--dur) linear var(--delay) forwards;
+}
+
+@keyframes leaf-fall{
+  0%   { transform: translate(var(--start-x), -12vh); opacity: 0; }
+  5%   { opacity: .95; }
+  100% { transform: translate(var(--end-x), 112vh); opacity: 0; }
+}
+@keyframes leaf-drift{
+  0%   {}
+  50%  { transform: translate(calc(var(--start-x) + var(--amp)), 50vh); }
+  100% { transform: translate(var(--end-x), 112vh); }
+}
+@keyframes leaf-spin{
+  0%   { rotate: var(--rot-start); }
+  100% { rotate: var(--rot-end); }
+}
+
+/* accessibility */
+@media (prefers-reduced-motion: reduce){
+  .leaf{ animation: none !important; opacity: 0; }
+}
     </style>
   </head>
   <body>
+    <!-- Falling leaves background layer -->
+<div id="leaf-layer" aria-hidden="true"></div>
     <!-- Navbar -->
     <nav>
       <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
@@ -154,8 +200,7 @@
         </div>
         <a href="#"></a>
       </figure>
-
-      <!-- Pumpkin Cheesecake Truffles -->
+ <!-- Pumpkin Cheesecake Truffles -->
   <figure class="tile">
     <div class="thumb">
       <img src="/images/pumpkin cheesecake truffles.jpeg" alt="Pumpkin Cheesecake Truffles" loading="lazy" />
@@ -170,9 +215,7 @@
     </div>
     <a href="#"></a>
   </figure>
-
-
-      <!-- Strawberry Meringue kisses -->
+ <!-- Strawberry Meringue kisses -->
       <figure class="tile">
         <div class="thumb">
           <img src="/images/Strawberry Meringue kisses.jpeg" alt="Strawberry Meringue Kisses" loading="lazy" />
@@ -188,5 +231,72 @@
         <a href="#"></a>
       </figure>
     </main>
+    <script>
+(() => {
+  // stop if user prefers reduced motion
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const layer = document.getElementById('leaf-layer');
+  if (!layer) return;
+
+  // Put these four PNGs in /images/ (transparent backgrounds)
+  const LEAVES = [
+    '/images/leaf1.png',
+    '/images/leaf2.png',
+    '/images/leaf3.png',
+    '/images/leaf4.png'
+  ];
+
+  const CFG = {
+    minInterval: 1600,  // spawn every 1.6–3.0s
+    maxInterval: 3000,
+    minDur: 7000,       // each leaf falls for 7–11s
+    maxDur: 11000,
+    minSize: 24,        // px
+    maxSize: 48,
+    minAmp: 20,         // horizontal sway in px
+    maxAmp: 70,
+    maxConcurrent: 2    // keep cozy, raise to 3+ for more
+  };
+
+  let live = 0;
+  const rand = (a,b) => Math.random()*(b-a)+a;
+
+  function spawnLeaf(){
+    if (live >= CFG.maxConcurrent) return;
+
+    const img = document.createElement('img');
+    img.className = 'leaf';
+    img.src = LEAVES[Math.floor(Math.random()*LEAVES.length)];
+
+    const size    = rand(CFG.minSize, CFG.maxSize);
+    const dur     = rand(CFG.minDur,  CFG.maxDur);
+    const startX  = rand(0, innerWidth);
+    const endX    = startX + rand(-140, 140);
+    const amp     = rand(CFG.minAmp, CFG.maxAmp);
+
+    img.style.setProperty('--size', `${size}px`);
+    img.style.setProperty('--dur',  `${dur}ms`);
+    img.style.setProperty('--delay', '0ms');
+    img.style.setProperty('--start-x', `${startX}px`);
+    img.style.setProperty('--end-x',   `${endX}px`);
+    img.style.setProperty('--amp',     `${amp}px`);
+    img.style.setProperty('--rot-start', `${rand(-25,25)}deg`);
+    img.style.setProperty('--rot-end',   `${rand(-360,360)}deg`);
+    img.style.left = `${startX}px`;
+
+    img.addEventListener('animationend', () => { img.remove(); live--; }, {once:true});
+
+    live++;
+    layer.appendChild(img);
+  }
+
+  function loop(){
+    spawnLeaf();
+    setTimeout(loop, rand(CFG.minInterval, CFG.maxInterval));
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
   </body>
 </html>
