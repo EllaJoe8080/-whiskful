@@ -5,8 +5,27 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Whiskful Recipes</title>
     <style>
-      :root { --brand:#ff7a59; --bg:#fff8f3; --pin:#e60023; }
-      * { box-sizing: border-box; margin: 0; padding: 0; }
+      /* Make the whole card clickable, but keep it BELOW the buttons */
+.tile > a {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: block;
+    cursor: pointer;
+  }
+
+  /* Add focus outline for keyboard users */
+  .tile > a:focus-visible {
+    outline: 3px solid var(--brand);
+    outline-offset: -3px;
+  }
+
+  /* Keep buttons above the link */
+  .overlay {
+    z-index: 2;
+  }
+
+  :root { --brand:#ff7a59; --bg:#fff8f3; --pin:#e60023;}
 
       body {
         font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
@@ -166,12 +185,19 @@
 <div id="leaf-layer" aria-hidden="true"></div>
     <!-- Navbar -->
     <nav>
+      <select id="language-switcher" aria-label="Change language">
+  <option value="en">English</option>
+  <option value="es">Español</option>
+  <option value="fr">Français</option>
+  <option value="ar">العربية</option>
+  <option value="zh">中文</option>
+</select>
       <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
       <ul>
-        <li><a href="recipes.html">Recipes</a></li>
-        <li><a href="#">Community</a></li>
-        <li><a href="#">About</a></li>
-      </ul>
+  <li><a href="recipes.html" data-translate>Recipes</a></li>
+  <li><a href="#" data-translate>Community</a></li>
+  <li><a href="#" data-translate>About</a></li>
+</ul>
     </nav>
 
     <!-- Search -->
@@ -200,7 +226,7 @@
     </button>
   </div>
 
-<a href="pistachio-roll.html"></a>
+<a href="pistachio-roll.html" aria-label="View Pistachio Chocolate Swiss Roll recipe"></a>
 </figure>
  <!-- Pumpkin Cheesecake Truffles -->
   <figure class="tile" data-id="pumpkin-truffles">
@@ -216,7 +242,7 @@
       </svg>
     </button>
   </div>
-  <a href="#"></a>
+  <a href="pumpkin-truffles.html" aria-label="View Pumpkin Cheesecake Truffles recipe"></a>
 </figure>
  <!-- Strawberry Meringue kisses -->
      <figure class="tile" data-id="strawberry-meringue">
@@ -231,8 +257,7 @@
               fill="none" stroke="red" stroke-width="2"/>
       </svg>
     </button>
-  </div>
-  <a href="#"></a>
+  </div><a href="strawberry-meringue.html" aria-label="View Strawberry Meringue Kisses recipe"></a><a href="strawberry-meringue.html"></a>
 </figure>
       
     </main>
