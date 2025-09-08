@@ -427,7 +427,7 @@ nav select#language-switcher {
 </script>
   <script>
 /** ====== CONFIG ====== **/
-const API_KEY = "<AIzaSyAFnwuMvl4yd2JH31u-UwFlW-_BNLRFlWw>"; // for testing only; restrict by referrer!
+const API_KEY = "AIzaSyAFnwuMvl4yd2JH31u-UwFlW-_BNLRFlWw"; // for testing only; restrict by referrer!
 const CACHE_KEY = "whiskful-i18n-cache-v1";
 
 /** ====== HELPERS ====== **/
@@ -543,7 +543,7 @@ async function switchLanguage(lang) {
 
   // Apply back: first all text nodes, then attributes
   final.slice(0, originals.length).forEach((val, i) => {
-    textNodes[i].innerHTML = val; // plain text from API; safe to set
+    textNodes[i].textContent = val; // plain text from API; safe to set
   });
 
   let k = originals.length;
