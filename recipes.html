@@ -41,7 +41,16 @@
         display:flex; align-items:center; justify-content:space-between;
       }
       nav img.logo { max-height:140px; width:auto; display:block; }
-      nav ul { list-style:none; display:flex; gap:24px; }
+      nav ul {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  margin-left: auto;   /* pushes menu to the right */
+}
+
+nav select#language-switcher {
+  margin-left: 16px;   /* small gap after the menu */
+}
       nav a { text-decoration:none; font-weight:600; color:#333; }
       nav a:hover { color:var(--brand); }
 
@@ -185,20 +194,20 @@
 <div id="leaf-layer" aria-hidden="true"></div>
     <!-- Navbar -->
     <nav>
-      <select id="language-switcher" aria-label="Change language">
-  <option value="en">English</option>
-  <option value="es">Español</option>
-  <option value="fr">Français</option>
-  <option value="ar">العربية</option>
-  <option value="zh">中文</option>
-</select>
-      <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
-      <ul>
-  <li><a href="recipes.html" data-translate>Recipes</a></li>
-  <li><a href="#" data-translate>Community</a></li>
-  <li><a href="#" data-translate>About</a></li>
-</ul>
-    </nav>
+  <a href="index.html"><img src="/logo.png" alt="Whiskful logo" class="logo" /></a>
+  <ul>
+    <li><a href="recipes.html" data-translate>Recipes</a></li>
+    <li><a href="#" data-translate>Community</a></li>
+    <li><a href="#" data-translate>About</a></li>
+  </ul>
+  <select id="language-switcher" aria-label="Change language">
+    <option value="en">English</option>
+    <option value="es">Español</option>
+    <option value="fr">Français</option>
+    <option value="ar">العربية</option>
+    <option value="zh">中文</option>
+  </select>
+</nav>
 
     <!-- Search -->
     <div class="search-wrap">
@@ -231,7 +240,7 @@
  <!-- Pumpkin Cheesecake Truffles -->
   <figure class="tile" data-id="pumpkin-truffles">
   <div class="thumb">
-    <img src="/images/pumpkin cheesecake truffles.jpeg" alt="Pumpkin Cheesecake Truffles" loading="lazy" />
+    <img src="/images/pumpkin-cheesecake-truffles.jpeg" alt="Pumpkin Cheesecake Truffles" loading="lazy" />
   </div>
   <div class="overlay">
     <button class="save-btn" type="button" aria-pressed="false">Save</button>
@@ -247,7 +256,7 @@
  <!-- Strawberry Meringue kisses -->
      <figure class="tile" data-id="strawberry-meringue">
   <div class="thumb">
-    <img src="/images/Strawberry Meringue kisses.jpeg" alt="Strawberry Meringue Kisses" loading="lazy" />
+    <img src="/images/strawberry-meringue-kisses.jpeg" alt="Strawberry Meringue Kisses" loading="lazy" />
   </div>
   <div class="overlay">
     <button class="save-btn" type="button" aria-pressed="false">Save</button>
@@ -257,7 +266,7 @@
               fill="none" stroke="red" stroke-width="2"/>
       </svg>
     </button>
-  </div><a href="strawberry-meringue.html" aria-label="View Strawberry Meringue Kisses recipe"></a><a href="strawberry-meringue.html"></a>
+  </div><a href="strawberry-meringue.html" aria-label="View Strawberry Meringue Kisses recipe"></a>
 </figure>
       
     </main>
