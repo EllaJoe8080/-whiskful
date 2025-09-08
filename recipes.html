@@ -212,7 +212,11 @@ nav select#language-switcher {
     <!-- Search -->
     <div class="search-wrap">
       <div class="search-box">
-        <input type="text" placeholder="Search recipes..." />
+        <input
+  type="text"
+  placeholder="Search recipes..."
+  data-translate-attr="placeholder"
+/>
         <img src="/images/cherries.gif" alt="" class="dangling-gif" />
       </div>
     </div>
@@ -418,6 +422,153 @@ nav select#language-switcher {
       saveState(state);
       return;
     }
+  });
+})();
+</script>
+  <script>
+/** ====== CONFIG ====== **/
+const API_KEY = "<YOUR_REFERRER_RESTRICTED_KEY>"; // for testing only; restrict by referrer!
+const CACHE_KEY = "whiskful-i18n-cache-v1";
+
+/** ====== HELPERS ====== **/
+const $ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+// elements with visible text to translate
+function getTextNodes() {
+  return $("[data-translate]");
+}
+
+// elements with attributes to translate, e.g. data-translate-attr="placeholder|title"
+function getAttrNodes() {
+  return $("[data-translate-attr]");
+}
+
+function loadCache() {
+  try { return JSON.parse(localStorage.getItem(CACHE_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveCache(cache) {
+  localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+}
+
+/** Batch translate: send ONE request with many strings **/
+async function translateBatch(lines, targetLang) {
+  if (!lines.length || targetLang === "en") return lines;
+
+  const url = `https://translation.googleapis.com/language/translate/v2?key=${API_KEY}`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ q: lines, target: targetLang, format: "text" })
+  });
+  const json = await res.json();
+  if (!json.data || !json.data.translations) throw new Error("Translation failed");
+  return json.data.translations.map(t => t.translatedText);
+}
+
+/** Apply direction (RTL for Arabic, otherwise LTR) **/
+function applyDir(lang) {
+  const rtl = ["ar", "fa", "he", "ur"];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = rtl.includes(lang) ? "rtl" : "ltr";
+  document.body.classList.toggle("rtl", rtl.includes(lang));
+}
+
+/** Main switcher **/
+async function switchLanguage(lang) {
+  applyDir(lang);
+
+  // Gather text content nodes
+  const textNodes = getTextNodes();
+  const originals = textNodes.map(el => {
+    // stash original once
+    if (!el.dataset.original) el.dataset.original = el.innerText.trim();
+    return el.dataset.original;
+  });
+
+  // Gather attribute nodes
+  const attrNodes = getAttrNodes().flatMap(el => {
+    const attrs = el.getAttribute("data-translate-attr").split("|").map(a => a.trim());
+    return attrs.map(attr => {
+      const key = `attr:${attr}`;
+      if (!el.dataset[key]) el.dataset[key] = (el.getAttribute(attr) || "").trim();
+      return { el, attr, original: el.dataset[key] };
+    });
+  });
+
+  // Build full batch list (text + attrs)
+  const allOriginals = [
+    ...originals,
+    ...attrNodes.map(x => x.original)
+  ];
+
+  // If English, just restore originals
+  if (lang === "en") {
+    textNodes.forEach((el, i) => { el.innerText = textNodes[i].dataset.original; });
+    attrNodes.forEach(({el, attr}) => { el.setAttribute(attr, el.dataset[`attr:${attr}`]); });
+    return;
+  }
+
+  // Cache lookup
+  const cache = loadCache();
+  const toTranslate = [];
+  const mapIndex = []; // map from allOriginals index -> position in toTranslate or cache
+
+  allOriginals.forEach((text, idx) => {
+    const key = `${lang}::${text}`;
+    if (cache[key]) {
+      mapIndex[idx] = { fromCache: true, value: cache[key] };
+    } else {
+      mapIndex[idx] = { fromCache: false, queueIndex: toTranslate.push(text) - 1 };
+    }
+  });
+
+  // Call API once for the items not in cache
+  let translatedQueued = [];
+  if (toTranslate.length) {
+    translatedQueued = await translateBatch(toTranslate, lang);
+    // write new translations to cache
+    translatedQueued.forEach((val, i) => {
+      const orig = toTranslate[i];
+      cache[`${lang}::${orig}`] = val;
+    });
+    saveCache(cache);
+  }
+
+  // Rebuild final list
+  const final = allOriginals.map((_, idx) => {
+    const m = mapIndex[idx];
+    return m.fromCache ? m.value : translatedQueued[m.queueIndex];
+  });
+
+  // Apply back: first all text nodes, then attributes
+  final.slice(0, originals.length).forEach((val, i) => {
+    textNodes[i].innerHTML = val; // plain text from API; safe to set
+  });
+
+  let k = originals.length;
+  attrNodes.forEach(({el, attr}, i) => {
+    const val = final[k++];
+    el.setAttribute(attr, val);
+  });
+}
+
+/** Hook the switcher **/
+const switcher = document.getElementById("language-switcher");
+if (switcher) {
+  switcher.addEventListener("change", e => switchLanguage(e.target.value));
+}
+
+/** Optional: translate on first load based on URL ?lang=xx or saved choice **/
+(function initLang(){
+  const params = new URLSearchParams(location.search);
+  const saved = localStorage.getItem("whiskful-lang");
+  const lang = params.get("lang") || saved || "en";
+  if (switcher) switcher.value = lang;
+  switchLanguage(lang).catch(console.error);
+  // remember choice after user changes it
+  switcher?.addEventListener("change", () => {
+    localStorage.setItem("whiskful-lang", switcher.value);
   });
 })();
 </script>
