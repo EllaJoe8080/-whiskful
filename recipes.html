@@ -585,64 +585,10 @@ if (switcher) {
   });
 })();
 </script>
-    <!-- Cloudinary Upload Widget -->
-<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
-<script>
-  const cloudName = "danldkifo";          // ✅ your cloud name
-  const uploadPreset = "unsigned_preset";  // ✅ your unsigned preset
 
-  // Create the widget once
-  const uploadWidget = cloudinary.createUploadWidget(
-    {
-      cloudName,
-      uploadPreset,
-      sources: ["local", "url", "camera"],
-      multiple: false,
-      cropping: false,
-      folder: "recipes"
-    },
-    (error, result) => {
-      if (!error && result && result.event === "success") {
-  const url = result.info.secure_url;
-  const id  = result.info.public_id; // unique Cloudinary id
-
-  const card = {
-    id,
-    url,
-    caption: "Enter recipe title here...",
-    styles: { fontFamily:"", fontSize:"", color:"", textAlign:"center" }
-  };
-
-  const grid = document.querySelector(".grid");
-  const fig = renderCard(card);   // <- use your renderer so edit/save works
-  grid.appendChild(fig);
-
-  // persist immediately
-  const cards = loadCards();
-  cards.push(card);
-  saveCards(cards);
-
-  // translate new caption to current language
-  const currentLang = document.getElementById("language-switcher")?.value || "en";
-  if (typeof switchLanguage === "function") switchLanguage(currentLang);
-}
-      
-    }
-  );
-
-  // Button handler
-  function openUploadWidget() {
-    uploadWidget.open();
-  }
-</script>
-
-<!-- Button to trigger upload -->
-<button onclick="openUploadWidget()"
-        style="margin:20px; padding:10px 16px; background:#ff7a59; color:#fff; border:none; border-radius:8px; cursor:pointer;">
-  ➕ Add New Recipe
-</button>
     <script>
-  const CARDS_KEY = "whiskful-cards-v1"; // [{id, url, caption, styles:{fontFamily,fontSize,color,textAlign}}]
+  /* ===== Cards state & renderer (uses images[]) ===== */
+  const CARDS_KEY = "whiskful-cards-v1"; // [{id,url,caption,styles,images:[] }]
 
   function loadCards(){
     try { return JSON.parse(localStorage.getItem(CARDS_KEY)) || []; }
@@ -655,7 +601,7 @@ if (switcher) {
   // Rebuild cards on page load
   window.addEventListener("DOMContentLoaded", () => {
     const cards = loadCards();
-    const grid = document.querySelector(".grid");
+    const grid  = document.querySelector(".grid");
     cards.forEach(card => {
       const fig = renderCard(card);
       grid.appendChild(fig);
@@ -665,15 +611,23 @@ if (switcher) {
     if (typeof switchLanguage === "function") switchLanguage(currentLang);
   });
 
-  // Renders a card element from a card object
   function renderCard(card){
     const fig = document.createElement("figure");
     fig.className = "tile";
     fig.dataset.id = card.id;
 
     fig.innerHTML = `
-      <div class="thumb">
+      <div class="thumb" style="position:relative;">
         <img src="${card.url}" alt="${card.caption || 'Recipe'}" loading="lazy" />
+        ${Array.isArray(card.images) && card.images.length > 1
+          ? `<span class="album-pill" style="
+                position:absolute; top:6px; right:6px;
+                padding:2px 6px; border-radius:999px;
+                background:rgba(0,0,0,.6); color:#fff; font-size:12px; font-weight:700;">
+                +${card.images.length - 1}
+             </span>`
+          : ""
+        }
       </div>
       <figcaption contenteditable="true"
                   class="recipe-title"
@@ -689,27 +643,26 @@ if (switcher) {
       <div class="card-actions">
         <button class="save-card-btn">Save Card</button>
       </div>
+      <a href="recipe.html?id=${encodeURIComponent(card.id)}" aria-label="Open recipe"></a>
     `;
 
     const caption = fig.querySelector("figcaption");
     caption.textContent = card.caption || "Enter recipe title here...";
-    // stash original for translator
     caption.dataset.original = caption.textContent;
 
-    // Apply saved styles
     applyStyles(caption, card.styles);
 
-    // Hook up in-place edit save
+    // mark editing while typing
     fig.addEventListener("input", () => markEditing(fig, true));
     fig.querySelector(".save-card-btn").addEventListener("click", () => {
       persistFigure(fig);
       markEditing(fig, false);
     });
 
-    // Clicking into editable parts sets the current target for the style toolbar
+    // keep your toolbar in sync
     fig.addEventListener("focusin", (e) => {
       const editable = e.target.closest("[contenteditable='true']");
-      if (editable) setActiveEditable(editable);
+      if (editable && typeof setActiveEditable === "function") setActiveEditable(editable);
     });
 
     return fig;
@@ -727,13 +680,13 @@ if (switcher) {
     if (styles.textAlign)  el.style.textAlign  = styles.textAlign;
   }
 
-  // Save a single figure back to localStorage
+  // Save a single figure back to localStorage (preserve album)
   function persistFigure(fig){
     const id = fig.dataset.id;
     const captionEl = fig.querySelector("figcaption");
     const img = fig.querySelector("img");
 
-    // Keep translator happy: update data-original to what the user typed
+    // update translator seed
     captionEl.dataset.original = captionEl.textContent.trim();
 
     const cards = loadCards();
@@ -744,16 +697,135 @@ if (switcher) {
       color:      captionEl.style.color      || "",
       textAlign:  captionEl.style.textAlign  || ""
     };
-    const payload = {
+    const base = {
       id,
       url: img.src,
       caption: captionEl.textContent.trim(),
       styles
     };
-    if (idx >= 0) cards[idx] = payload; else cards.push(payload);
+
+    if (idx >= 0) {
+      const existing = cards[idx];
+      // keep any existing album; if none, start one with the cover
+      cards[idx] = { ...base, images: Array.isArray(existing.images) ? existing.images : [existing.url] };
+    } else {
+      cards.push({ ...base, images: [img.src] });
+    }
     saveCards(cards);
   }
 </script>
+
+
+    
+   <!-- Cloudinary Upload Widget -->
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+<script>
+  const cloudName = "danldkifo";
+  const uploadPreset = "unsigned_preset";
+
+  // Temporary holder for the album being created/extended
+  let pendingAlbum = null;   // { id, images: [], caption, styles }
+
+  // Make sure our style toolbar targets the right element after upload
+  function focusToolbarOn(fig){
+    // scroll into view & focus the title so toolbar controls apply there
+    fig.scrollIntoView({behavior:"smooth", block:"center"});
+    const editable = fig.querySelector("[contenteditable='true']");
+    editable?.focus();
+    // if you have setActiveEditable from earlier steps, keep calling it:
+    if (typeof setActiveEditable === "function") setActiveEditable(editable);
+  }
+
+  // Create the widget once
+  const uploadWidget = cloudinary.createUploadWidget(
+    {
+      cloudName,
+      uploadPreset,
+      sources: ["local", "url", "camera"],
+      multiple: true,              // ✅ allow multiple files
+      showCompletedButton: true,
+      cropping: false,
+      folder: "recipes"
+    },
+    (error, result) => {
+      if (error) { console.error(error); return; }
+
+      // 1) Each successful file
+      if (result?.event === "success") {
+        const url = result.info.secure_url;
+        const id  = result.info.public_id;
+
+        // if starting a new album
+        if (!pendingAlbum) {
+          pendingAlbum = {
+            id,                                // use first public_id as card id
+            images: [url],                     // album starts with first image
+            caption: "Enter recipe title here...",
+            styles: { fontFamily:"", fontSize:"", color:"", textAlign:"center" }
+          };
+
+          // create the visible card immediately (shows first image)
+          const grid = document.querySelector(".grid");
+          const fig = renderCard({
+            id: pendingAlbum.id,
+            url: pendingAlbum.images[0],       // first image for the main thumb
+            caption: pendingAlbum.caption,
+            styles: pendingAlbum.styles,
+            images: pendingAlbum.images        // pass the album through
+          });
+          grid.appendChild(fig);
+
+          // persist a draft right away
+          const cards = loadCards();
+          cards.push({
+            id: pendingAlbum.id,
+            url: pendingAlbum.images[0],
+            caption: pendingAlbum.caption,
+            styles: pendingAlbum.styles,
+            images: [...pendingAlbum.images],
+          });
+          saveCards(cards);
+
+          // translate the new caption to current language (if you use i18n)
+          const currentLang = document.getElementById("language-switcher")?.value || "en";
+          if (typeof switchLanguage === "function") switchLanguage(currentLang);
+
+          // move the toolbar’s focus to this new card
+          const justAdded = grid.querySelector(`figure.tile[data-id="${pendingAlbum.id}"]`);
+          if (justAdded) focusToolbarOn(justAdded);
+        } else {
+          // continuing same album
+          pendingAlbum.images.push(url);
+
+          // update the existing card’s stored album
+          const cards = loadCards();
+          const idx = cards.findIndex(c => c.id === pendingAlbum.id);
+          if (idx >= 0) {
+            cards[idx].images = [...pendingAlbum.images];
+            // keep the main display using the first image
+            cards[idx].url = pendingAlbum.images[0];
+            saveCards(cards);
+          }
+        }
+      }
+
+      // 2) When all queued uploads finish, “lock in” and clear the temp
+      if (result?.event === "queues-end" || result?.event === "close") {
+        if (pendingAlbum) {
+          // You could show a little toast here like “3 images added”
+          pendingAlbum = null;
+        }
+      }
+    }
+  );
+
+  // Button handler
+  function openUploadWidget() {
+    pendingAlbum = null;     // start fresh album for this session
+    uploadWidget.open();
+  }
+</script>
+    
     <!-- ===== Inline style toolbar ===== -->
 <style>
   .style-bar{
