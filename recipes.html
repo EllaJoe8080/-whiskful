@@ -187,6 +187,19 @@ nav select#language-switcher {
   fill: red;              /* heart fills when liked */
   stroke: red;
 }
+      .recipe-meta{ padding:10px; text-align:center; }
+.recipe-title{ margin:6px 0 8px; font-size:20px; font-weight:800; letter-spacing:.5px; }
+.meta-row{ font-size:14px; opacity:.9; display:flex; gap:6px; justify-content:center; align-items:center; }
+.card-actions{ display:flex; gap:6px; justify-content:center; padding:8px 0 12px; }
+.card-actions button{
+  border:0; border-radius:8px; padding:6px 10px; cursor:pointer;
+  background:#eee;
+}
+.card-actions .save-card-btn{ background:var(--brand); color:#fff; }
+.tile.editing .recipe-title, .tile.editing .servings, .tile.editing .totaltime{
+  outline:2px dashed rgba(0,0,0,.15);
+  outline-offset:2px;
+}
     </style>
   </head>
   <body>
@@ -590,30 +603,29 @@ if (switcher) {
     },
     (error, result) => {
       if (!error && result && result.event === "success") {
-        const url = result.info.secure_url;
-        console.log("Uploaded image:", url);
+  const url = result.info.secure_url;
+  const id  = result.info.public_id; // unique Cloudinary id
 
-        // add a new, editable card
-        const grid = document.querySelector(".grid");
-        const newCard = document.createElement("figure");
-        newCard.className = "tile";
-        newCard.innerHTML = `
-          <div class="thumb">
-            <img src="${url}" alt="New Recipe" loading="lazy" />
-          </div>
-          <figcaption contenteditable="true"
-                      style="padding:10px; text-align:center; font-weight:bold;"
-                      data-translate>
-            Enter recipe title here...
-          </figcaption>
-        `;
-        grid.appendChild(newCard);
+  const card = {
+    id,
+    url,
+    caption: "Enter recipe title here...",
+    styles: { fontFamily:"", fontSize:"", color:"", textAlign:"center" }
+  };
 
-        // 🔁 immediately translate the new caption to the current language
-        const currentLang = document.getElementById("language-switcher")?.value || "en";
-        if (typeof switchLanguage === "function") {
-          switchLanguage(currentLang);
-        }
+  const grid = document.querySelector(".grid");
+  const fig = renderCard(card);   // <- use your renderer so edit/save works
+  grid.appendChild(fig);
+
+  // persist immediately
+  const cards = loadCards();
+  cards.push(card);
+  saveCards(cards);
+
+  // translate new caption to current language
+  const currentLang = document.getElementById("language-switcher")?.value || "en";
+  if (typeof switchLanguage === "function") switchLanguage(currentLang);
+}
       }
     }
   );
@@ -629,5 +641,118 @@ if (switcher) {
         style="margin:20px; padding:10px 16px; background:#ff7a59; color:#fff; border:none; border-radius:8px; cursor:pointer;">
   ➕ Add New Recipe
 </button>
+    <script>
+  const CARDS_KEY = "whiskful-cards-v1"; // [{id, url, caption, styles:{fontFamily,fontSize,color,textAlign}}]
+
+  function loadCards(){
+    try { return JSON.parse(localStorage.getItem(CARDS_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveCards(cards){
+    localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
+  }
+
+  // Rebuild cards on page load
+  window.addEventListener("DOMContentLoaded", () => {
+    const cards = loadCards();
+    const grid = document.querySelector(".grid");
+    cards.forEach(card => {
+      const fig = renderCard(card);
+      grid.appendChild(fig);
+    });
+    // re-apply current language to rebuilt captions
+    const currentLang = document.getElementById("language-switcher")?.value || "en";
+    if (typeof switchLanguage === "function") switchLanguage(currentLang);
+  });
+
+  // Renders a card element from a card object
+  function renderCard(card){
+    const fig = document.createElement("figure");
+    fig.className = "tile";
+    fig.dataset.id = card.id;
+
+    fig.innerHTML = `
+      <div class="thumb">
+        <img src="${card.url}" alt="${card.caption || 'Recipe'}" loading="lazy" />
+      </div>
+      <figcaption contenteditable="true"
+                  class="recipe-title"
+                  data-translate
+                  style="padding:10px; text-align:center; font-weight:bold;">
+      </figcaption>
+      <div class="recipe-meta">
+        <div class="meta-row">
+          <span class="servings" contenteditable="true" data-translate>Serves 6</span> ·
+          <span class="totaltime" contenteditable="true" data-translate>Total 45 min</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="save-card-btn">Save Card</button>
+      </div>
+    `;
+
+    const caption = fig.querySelector("figcaption");
+    caption.textContent = card.caption || "Enter recipe title here...";
+    // stash original for translator
+    caption.dataset.original = caption.textContent;
+
+    // Apply saved styles
+    applyStyles(caption, card.styles);
+
+    // Hook up in-place edit save
+    fig.addEventListener("input", () => markEditing(fig, true));
+    fig.querySelector(".save-card-btn").addEventListener("click", () => {
+      persistFigure(fig);
+      markEditing(fig, false);
+    });
+
+    // Clicking into editable parts sets the current target for the style toolbar
+    fig.addEventListener("focusin", (e) => {
+      const editable = e.target.closest("[contenteditable='true']");
+      if (editable) setActiveEditable(editable);
+    });
+
+    return fig;
+  }
+
+  function markEditing(fig, on){
+    fig.classList.toggle("editing", !!on);
+  }
+
+  function applyStyles(el, styles={}){
+    if (!el) return;
+    if (styles.fontFamily) el.style.fontFamily = styles.fontFamily;
+    if (styles.fontSize)   el.style.fontSize   = styles.fontSize;
+    if (styles.color)      el.style.color      = styles.color;
+    if (styles.textAlign)  el.style.textAlign  = styles.textAlign;
+  }
+
+  // Save a single figure back to localStorage
+  function persistFigure(fig){
+    const id = fig.dataset.id;
+    const captionEl = fig.querySelector("figcaption");
+    const img = fig.querySelector("img");
+
+    // Keep translator happy: update data-original to what the user typed
+    captionEl.dataset.original = captionEl.textContent.trim();
+
+    const cards = loadCards();
+    const idx = cards.findIndex(c => c.id === id);
+    const styles = {
+      fontFamily: captionEl.style.fontFamily || "",
+      fontSize:   captionEl.style.fontSize   || "",
+      color:      captionEl.style.color      || "",
+      textAlign:  captionEl.style.textAlign  || ""
+    };
+    const payload = {
+      id,
+      url: img.src,
+      caption: captionEl.textContent.trim(),
+      styles
+    };
+    if (idx >= 0) cards[idx] = payload; else cards.push(payload);
+    saveCards(cards);
+  }
+</script>
   </body>
 </html>
