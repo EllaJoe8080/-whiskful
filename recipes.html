@@ -754,5 +754,100 @@ if (switcher) {
     saveCards(cards);
   }
 </script>
+    <!-- ===== Inline style toolbar ===== -->
+<style>
+  .style-bar{
+    position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+    background:#fff; border:1px solid #e5e5e5; border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+    padding:8px; display:flex; gap:8px; align-items:center; z-index:9999;
+  }
+  .style-bar select, .style-bar input[type="color"], .style-bar button{
+    height:32px; border-radius:8px; border:1px solid #ddd; background:#fff; padding:0 8px;
+  }
+  .style-bar .group{ display:flex; gap:6px; align-items:center; }
+  .style-bar .muted{ font-size:12px; opacity:.7; margin-right:6px; }
+  @media (max-width:640px){ .style-bar{ bottom: 10px; } }
+</style>
+
+<div class="style-bar" id="styleBar" hidden>
+  <span class="muted">Text:</span>
+  <div class="group">
+    <select id="fontFamily">
+      <option value="">Default</option>
+      <option value="Georgia, serif">Georgia</option>
+      <option value="'Times New Roman', Times, serif">Times</option>
+      <option value="'Trebuchet MS', system-ui, sans-serif">Trebuchet</option>
+      <option value="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">System</option>
+    </select>
+    <select id="fontSize">
+      <option value="">Size</option>
+      <option>16px</option><option>18px</option><option selected>20px</option>
+      <option>24px</option><option>28px</option><option>32px</option>
+    </select>
+    <input type="color" id="fontColor" title="Text color" />
+  </div>
+  <div class="group">
+    <button type="button" data-align="left">Left</button>
+    <button type="button" data-align="center">Center</button>
+    <button type="button" data-align="right">Right</button>
+  </div>
+</div>
+
+<script>
+  // --- Simple style toolbar wiring ---
+  let ACTIVE_EDITABLE = null;
+
+  // expose this so renderCard() can call it (you referenced it earlier)
+  window.setActiveEditable = function(el){
+    ACTIVE_EDITABLE = el;
+    // reflect current styles in controls
+    fontFamily.value = el.style.fontFamily || "";
+    fontSize.value   = el.style.fontSize   || "20px";
+    fontColor.value  = rgbToHex(getComputedStyle(el).color);
+    styleBar.hidden  = false;
+  };
+
+  // Show toolbar when user clicks in any contenteditable within a tile
+  document.addEventListener('focusin', (e) => {
+    const el = e.target.closest('.tile [contenteditable="true"]');
+    if (el) window.setActiveEditable(el);
+  });
+  // Hide toolbar if focus leaves editable areas
+  document.addEventListener('click', (e) => {
+    const insideEditable = e.target.closest('.tile [contenteditable="true"]');
+    const insideBar = e.target.closest('#styleBar');
+    if (!insideEditable && !insideBar) styleBar.hidden = true;
+  });
+
+  // controls
+  const styleBar   = document.getElementById('styleBar');
+  const fontFamily = document.getElementById('fontFamily');
+  const fontSize   = document.getElementById('fontSize');
+  const fontColor  = document.getElementById('fontColor');
+
+  fontFamily.addEventListener('change', () => applyStyle('fontFamily', fontFamily.value));
+  fontSize.addEventListener('change',   () => applyStyle('fontSize', fontSize.value));
+  fontColor.addEventListener('input',   () => applyStyle('color', fontColor.value));
+  styleBar.querySelectorAll('button[data-align]').forEach(btn => {
+    btn.addEventListener('click', () => applyStyle('textAlign', btn.dataset.align));
+  });
+
+  function applyStyle(prop, value){
+    if (!ACTIVE_EDITABLE) return;
+    ACTIVE_EDITABLE.style[prop] = value;
+    // mark the figure as editing so user sees dashed outline (your CSS already handles this)
+    const fig = ACTIVE_EDITABLE.closest('.tile');
+    fig && fig.classList.add('editing');
+  }
+
+  // util: rgb() -> #rrggbb for color input sync
+  function rgbToHex(rgb){
+    const m = rgb.match(/\d+/g);
+    if (!m) return '#000000';
+    const [r,g,b] = m.map(n => (+n).toString(16).padStart(2,'0'));
+    return `#${r}${g}${b}`;
+  }
+</script>
   </body>
 </html>
