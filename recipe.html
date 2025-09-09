@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Whiskful • Recipe</title>
+  <style>
+    :root { --brand:#ff7a59; --bg:#fff8f3; }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:#222; }
+    header{ display:flex; align-items:center; gap:12px; padding:14px 16px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.06); position:sticky; top:0; z-index:10; }
+    header a{ text-decoration:none; color:#333; font-weight:600; }
+    .wrap{ width:min(1100px,94%); margin:20px auto 60px; }
+
+    /* Title area (uses saved styles) */
+    .title{ font-weight:800; text-align:center; margin:10px 0 18px; }
+
+    /* Carousel */
+    .carousel{
+      position:relative; background:#fff; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.08);
+      padding:14px; display:grid; gap:10px;
+    }
+    .stage{
+      position:relative; width:100%; aspect-ratio: 4/3; background:#fafafa; border-radius:10px; overflow:hidden;
+      display:grid; place-items:center;
+    }
+    .stage img{ width:100%; height:100%; object-fit:contain; }
+    .nav-btn{
+      position:absolute; top:50%; transform:translateY(-50%); border:0; width:42px; height:42px; border-radius:50%;
+      background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.2); cursor:pointer; display:grid; place-items:center; font-weight:800;
+    }
+    .nav-btn:hover{ transform:translateY(-50%) scale(1.04); }
+    .prev{ left:10px; } .next{ right:10px; }
+
+    .thumbs{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+    .thumbs button{
+      width:84px; height:64px; border:2px solid transparent; border-radius:8px; overflow:hidden; cursor:pointer; background:#fff;
+    }
+    .thumbs button[aria-current="true"]{ border-color:var(--brand); }
+    .thumbs img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    .meta{ margin-top:16px; text-align:center; opacity:.85; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="recipes.html">← Back</a>
+    <span id="siteName" style="font-weight:800;">Whiskful</span>
+  </header>
+
+  <div class="wrap">
+    <h1 id="recipeTitle" class="title">Loading…</h1>
+
+    <section class="carousel" id="carousel" hidden>
+      <div class="stage">
+        <img id="hero" alt="Recipe image"/>
+        <button class="nav-btn prev" id="prevBtn" aria-label="Previous">‹</button>
+        <button class="nav-btn next" id="nextBtn" aria-label="Next">›</button>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+      <div class="meta" id="meta"></div>
+    </section>
+
+    <p id="emptyState" hidden>We couldn’t find this recipe. Try going back and opening a card that you created.</p>
+  </div>
+
+  <script>
+    const CARDS_KEY = "whiskful-cards-v1";
+    function loadCards(){ try { return JSON.parse(localStorage.getItem(CARDS_KEY)) || []; } catch { return []; } }
+
+    // Read ?id=...
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+
+    const cards = loadCards();
+    const card = cards.find(c => c.id === id);
+
+    const titleEl = document.getElementById("recipeTitle");
+    const metaEl  = document.getElementById("meta");
+    const carousel = document.getElementById("carousel");
+    const empty   = document.getElementById("emptyState");
+    const hero    = document.getElementById("hero");
+    const thumbs  = document.getElementById("thumbs");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    if (!card){
+      empty.hidden = false;
+    } else {
+      // Title + saved styles
+      titleEl.textContent = card.caption || "Untitled recipe";
+      if (card.styles){
+        if (card.styles.fontFamily) titleEl.style.fontFamily = card.styles.fontFamily;
+        if (card.styles.fontSize)   titleEl.style.fontSize   = card.styles.fontSize;
+        if (card.styles.color)      titleEl.style.color      = card.styles.color;
+        if (card.styles.textAlign)  titleEl.style.textAlign  = card.styles.textAlign;
+      }
+
+      const images = Array.isArray(card.images) && card.images.length ? card.images : [card.url].filter(Boolean);
+      let idx = 0;
+
+      function renderHero(){ hero.src = images[idx]; updateThumbActive(); }
+      function updateThumbActive(){
+        [...thumbs.children].forEach((b,i)=> b.setAttribute("aria-current", i===idx ? "true" : "false"));
+      }
+      function goto(n){ idx = (n + images.length) % images.length; renderHero(); }
+
+      // Build thumbs
+      images.forEach((src, i) => {
+        const b = document.createElement("button");
+        b.innerHTML = `<img src="${src}" alt="Slide ${i+1}">`;
+        b.addEventListener("click", () => { idx = i; renderHero(); });
+        thumbs.appendChild(b);
+      });
+
+      // Prev/next + keyboard
+      prevBtn.addEventListener("click", () => goto(idx-1));
+      nextBtn.addEventListener("click", () => goto(idx+1));
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft")  goto(idx-1);
+        if (e.key === "ArrowRight") goto(idx+1);
+      });
+
+      // Meta
+      metaEl.textContent = `${images.length} image${images.length>1?'s':''}`;
+
+      renderHero();
+      carousel.hidden = false;
+    }
+  </script>
+</body>
+</html>
