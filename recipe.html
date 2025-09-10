@@ -21,16 +21,19 @@
     }
     /* Full image inside the viewer, no cropping */
 .stage {
-  background:#fff;
-  border-radius:16px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-  padding:12px;
+  position: relative;
+  width: 100%;
+  background: transparent;   /* no extra box */
+  border-radius: 0;          /* no rounded corners */
+  box-shadow: none;          /* remove shadow */
+  overflow: hidden;
 }
 
 .stage img {
   width: 100%;
-  height: min(78vh, calc(100vh - 220px));  /* tall but below header/footer */
-  object-fit: contain;                     /* show the whole picture */
+  height: auto;              /* let image keep its real aspect ratio */
+  max-height: 90vh;          /* don’t exceed viewport height */
+  object-fit: contain;
   display: block;
 }
     .nav-btn{
